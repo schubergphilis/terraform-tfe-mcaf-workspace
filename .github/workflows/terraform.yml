@@ -1,0 +1,57 @@
+---
+name: Terraform Actions
+
+on:
+  pull_request:
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  terraform-fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@master
+      - name: Terraform Format
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: latest
+          tf_actions_subcommand: fmt
+          tf_actions_comment: true
+
+  terraform-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@master
+      - name: Terraform Init
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: latest
+          tf_actions_subcommand: init
+          tf_actions_comment: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Terraform Validate
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: latest
+          tf_actions_subcommand: validate
+          tf_actions_comment: true
+
+  terraform-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Update module usage using terraform-docs and push any changes back to PR branch
+        uses: Dirrk/terraform-docs@v1.0.6
+        with:
+          tf_docs_working_dir: .
+          tf_docs_output_file: README.md
+          tf_docs_output_method: inject
+          tf_docs_git_commit_message: 'terraform-docs: Update module usage'
+          tf_docs_git_push: 'true'
