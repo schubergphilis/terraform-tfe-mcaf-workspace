@@ -1,5 +1,5 @@
 locals {
-  connect_vcs_repo = var.connect_vcs_repo ? { create = true } : {}
+  connect_vcs_repo = var.github_repository == null || var.oauth_token_id == null ? {} : { create = true }
 }
 
 resource "tfe_workspace" "default" {
