@@ -7,6 +7,38 @@ workspace. If the `create_repository` option is set to `false`, the GitHub repos
 Terraform run will fail.
 
 <!--- BEGIN_TF_DOCS --->
+## Providers
+
+| Name | Version |
+|------|---------|
+| tfe | ~> 0.12 |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:-----:|
+| auto\_apply | Whether to automatically apply changes when a Terraform plan is successful | `bool` | `false` | no |
+| branch | The Git branch to trigger the TFE workspace for | `string` | `"master"` | no |
+| clear\_text\_env\_variables | An optional map with clear text environment variables | `map(string)` | `{}` | no |
+| clear\_text\_terraform\_variables | An optional map with clear text Terraform variables | `map(string)` | `{}` | no |
+| connect\_vcs\_repo | Whether or not to connect a VCS repo to the workspace | `bool` | `true` | no |
+| file\_triggers\_enabled | Whether to filter runs based on the changed files in a VCS push | `bool` | `true` | no |
+| github\_repository | The GitHub repository to connect the workspace to (in the form of "orgname/reponame") | `string` | n/a | yes |
+| name | A name for the Terraform workspace | `string` | n/a | yes |
+| oauth\_token\_id | The OAuth token ID of the VCS provider | `string` | n/a | yes |
+| sensitive\_env\_variables | An optional map with sensitive environment variables | `map(string)` | `{}` | no |
+| sensitive\_terraform\_variables | An optional map with sensitive Terraform variables | `map(string)` | `{}` | no |
+| slack\_notification\_url | The Slack Webhook URL to send notification to | `string` | n/a | yes |
+| terraform\_organization | The Terraform Enterprise organization to create the workspace in | `string` | n/a | yes |
+| terraform\_version | The version of Terraform to use for this workspace | `string` | `"latest"` | no |
+| trigger\_prefixes | List of repository-root-relative paths which should be tracked for changes | `list(string)` | <pre>[<br>  "modules"<br>]<br></pre> | no |
+| working\_directory | A relative path that Terraform will execute within | `string` | `"terraform"` | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| workspace\_id | The Terraform workspace ID |
 <!--- END_TF_DOCS --->
 
 ## License
