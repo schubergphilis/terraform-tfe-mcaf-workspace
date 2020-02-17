@@ -27,12 +27,6 @@ variable "clear_text_terraform_variables" {
   description = "An optional map with clear text Terraform variables"
 }
 
-variable "connect_vcs_repo" {
-  type        = bool
-  default     = true
-  description = "Whether or not to connect a VCS repo to the workspace"
-}
-
 variable "file_triggers_enabled" {
   type        = bool
   default     = true
@@ -41,11 +35,13 @@ variable "file_triggers_enabled" {
 
 variable "github_repository" {
   type        = string
-  description = "The GitHub repository to connect the workspace to (in the form of \"orgname/reponame\")"
+  default     = null
+  description = "The GitHub repository (org/repo) to connect the workspace to"
 }
 
 variable "oauth_token_id" {
   type        = string
+  default     = null
   description = "The OAuth token ID of the VCS provider"
 }
 

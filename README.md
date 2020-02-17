@@ -21,9 +21,8 @@ Terraform run will fail.
 | branch | The Git branch to trigger the TFE workspace for | `string` | `"master"` | no |
 | clear\_text\_env\_variables | An optional map with clear text environment variables | `map(string)` | `{}` | no |
 | clear\_text\_terraform\_variables | An optional map with clear text Terraform variables | `map(string)` | `{}` | no |
-| connect\_vcs\_repo | Whether or not to connect a VCS repo to the workspace | `bool` | `true` | no |
 | file\_triggers\_enabled | Whether to filter runs based on the changed files in a VCS push | `bool` | `true` | no |
-| github\_repository | The GitHub repository to connect the workspace to (in the form of "orgname/reponame") | `string` | n/a | yes |
+| github\_repository | The GitHub repository (org/repo) to connect the workspace to | `string` | n/a | yes |
 | name | A name for the Terraform workspace | `string` | n/a | yes |
 | oauth\_token\_id | The OAuth token ID of the VCS provider | `string` | n/a | yes |
 | sensitive\_env\_variables | An optional map with sensitive environment variables | `map(string)` | `{}` | no |
@@ -38,7 +37,7 @@ Terraform run will fail.
 
 | Name | Description |
 |------|-------------|
-| workspace\_id | The Terraform workspace ID |
+| id | The Terraform workspace ID |
 <!--- END_TF_DOCS --->
 
 ## License
