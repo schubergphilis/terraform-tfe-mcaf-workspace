@@ -11,7 +11,7 @@ Terraform run will fail.
 
 | Name | Version |
 |------|---------|
-| tfe | ~> 0.12 |
+| tfe | n/a |
 
 ## Inputs
 
