@@ -12,7 +12,7 @@ resource "tfe_workspace" "default" {
   queue_all_runs        = true
   working_directory     = var.working_directory
 
-  dynamic vcs_repo {
+  dynamic "vcs_repo" {
     for_each = local.connect_vcs_repo
 
     content {
