@@ -3,16 +3,16 @@ variable "name" {
   description = "A name for the Terraform workspace"
 }
 
+variable "agent_pool_id" {
+  type        = string
+  default     = null
+  description = "Agent pool ID. Requires \"execution_mode\" to be set to agent"
+}
+
 variable "auto_apply" {
   type        = bool
   default     = false
   description = "Whether to automatically apply changes when a Terraform plan is successful"
-}
-
-variable "branch" {
-  type        = string
-  default     = "master"
-  description = "The Git branch to trigger the TFE workspace for"
 }
 
 variable "clear_text_env_variables" {
@@ -21,10 +21,22 @@ variable "clear_text_env_variables" {
   description = "An optional map with clear text environment variables"
 }
 
+variable "clear_text_hcl_variables" {
+  type        = map(string)
+  default     = {}
+  description = "An optional map with clear text HCL variables"
+}
+
 variable "clear_text_terraform_variables" {
   type        = map(string)
   default     = {}
   description = "An optional map with clear text Terraform variables"
+}
+
+variable "execution_mode" {
+  type        = string
+  default     = "remote"
+  description = "Which execution mode to use"
 }
 
 variable "file_triggers_enabled" {
@@ -33,22 +45,16 @@ variable "file_triggers_enabled" {
   description = "Whether to filter runs based on the changed files in a VCS push"
 }
 
-variable "github_repository" {
-  type        = string
-  default     = null
-  description = "The GitHub repository (org/repo) to connect the workspace to"
-}
-
-variable "oauth_token_id" {
-  type        = string
-  default     = null
-  description = "The OAuth token ID of the VCS provider"
-}
-
 variable "sensitive_env_variables" {
   type        = map(string)
   default     = {}
   description = "An optional map with sensitive environment variables"
+}
+
+variable "sensitive_hcl_variables" {
+  type        = map(string)
+  default     = {}
+  description = "An optional map with sensitive HCL variables"
 }
 
 variable "sensitive_terraform_variables" {
@@ -57,10 +63,29 @@ variable "sensitive_terraform_variables" {
   description = "An optional map with sensitive Terraform variables"
 }
 
+variable "slack_notification_triggers" {
+  type = list(string)
+  default = [
+    "run:created",
+    "run:planning",
+    "run:needs_attention",
+    "run:applying",
+    "run:completed",
+    "run:errored"
+  ]
+  description = "The triggers to send to Slack"
+}
+
 variable "slack_notification_url" {
   type        = string
   default     = null
   description = "The Slack Webhook URL to send notification to"
+}
+
+variable "ssh_key_id" {
+  type        = string
+  default     = null
+  description = "The SSH key ID to assign to the workspace"
 }
 
 variable "terraform_version" {
@@ -78,6 +103,16 @@ variable "trigger_prefixes" {
   type        = list(string)
   default     = ["modules"]
   description = "List of repository-root-relative paths which should be tracked for changes"
+}
+
+variable "vcs_repo" {
+  type = object({
+    branch         = string
+    identifier     = string
+    oauth_token_id = string
+  })
+  default     = null
+  description = "VCS repository to connect to the workspace"
 }
 
 variable "working_directory" {
