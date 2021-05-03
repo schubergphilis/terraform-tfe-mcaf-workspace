@@ -30,7 +30,7 @@ resource "tfe_notification_configuration" "default" {
   enabled          = true
   destination_type = "slack"
   url              = var.slack_notification_url
-  workspace_id     = tfe_workspace.default.external_id
+  workspace_id     = tfe_workspace.default.id
 
   triggers = [
     "run:created",
