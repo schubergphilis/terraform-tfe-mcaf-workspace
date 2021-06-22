@@ -67,7 +67,7 @@ variable "slack_notification_triggers" {
     "run:completed",
     "run:errored"
   ]
-  description = "The triggers to send to Slack"
+  description = "The array of triggers for which to send notifications to Slack"
 }
 
 variable "slack_notification_url" {
