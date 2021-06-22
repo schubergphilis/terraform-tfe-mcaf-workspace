@@ -27,6 +27,7 @@ Terraform run will fail.
 | oauth\_token\_id | The OAuth token ID of the VCS provider | `string` | n/a | yes |
 | sensitive\_env\_variables | An optional map with sensitive environment variables | `map(string)` | `{}` | no |
 | sensitive\_terraform\_variables | An optional map with sensitive Terraform variables | `map(string)` | `{}` | no |
+| slack\_notification\_triggers | The array of triggers for which to send notifications to Slack | `list(string)` | <pre>[<br>  "run:created",<br>  "run:planning",<br>  "run:needs_attention",<br>  "run:applying",<br>  "run:completed",<br>  "run:errored"<br>]<br></pre> | no |
 | slack\_notification\_url | The Slack Webhook URL to send notification to | `string` | n/a | yes |
 | terraform\_organization | The Terraform Enterprise organization to create the workspace in | `string` | n/a | yes |
 | terraform\_version | The version of Terraform to use for this workspace | `string` | `"latest"` | no |

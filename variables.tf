@@ -57,6 +57,19 @@ variable "sensitive_terraform_variables" {
   description = "An optional map with sensitive Terraform variables"
 }
 
+variable "slack_notification_triggers" {
+  type = list(string)
+  default = [
+    "run:created",
+    "run:planning",
+    "run:needs_attention",
+    "run:applying",
+    "run:completed",
+    "run:errored"
+  ]
+  description = "The array of triggers for which to send notifications to Slack"
+}
+
 variable "slack_notification_url" {
   type        = string
   default     = null
