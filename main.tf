@@ -27,19 +27,11 @@ resource "tfe_workspace" "default" {
 resource "tfe_notification_configuration" "default" {
   count            = var.slack_notification_url != null ? 1 : 0
   name             = tfe_workspace.default.name
-  enabled          = true
+  enabled          = length(coalesce(var.slack_notification_triggers, [])) > 0
   destination_type = "slack"
+  triggers         = var.slack_notification_triggers
   url              = var.slack_notification_url
   workspace_id     = tfe_workspace.default.id
-
-  triggers = [
-    "run:created",
-    "run:planning",
-    "run:needs_attention",
-    "run:applying",
-    "run:completed",
-    "run:errored"
-  ]
 }
 
 resource "tfe_variable" "clear_text_env_variables" {
