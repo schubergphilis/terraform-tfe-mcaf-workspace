@@ -3,6 +3,12 @@ variable "name" {
   description = "A name for the Terraform workspace"
 }
 
+variable "agent_pool_id" {
+  type        = string
+  default     = null
+  description = "Agent pool ID, requires \"execution_mode\" to be set to agent"
+}
+
 variable "auto_apply" {
   type        = bool
   default     = false
@@ -21,11 +27,24 @@ variable "clear_text_env_variables" {
   description = "An optional map with clear text environment variables"
 }
 
+variable "clear_text_hcl_variables" {
+  type        = map(string)
+  default     = {}
+  description = "An optional map with clear text HCL Terraform variables"
+}
+
 variable "clear_text_terraform_variables" {
   type        = map(string)
   default     = {}
   description = "An optional map with clear text Terraform variables"
 }
+
+variable "execution_mode" {
+  type        = string
+  default     = "remote"
+  description = "Which execution mode to use"
+}
+
 
 variable "file_triggers_enabled" {
   type        = bool
@@ -33,16 +52,15 @@ variable "file_triggers_enabled" {
   description = "Whether to filter runs based on the changed files in a VCS push"
 }
 
-variable "github_repository" {
-  type        = string
-  default     = null
-  description = "The GitHub repository (org/repo) to connect the workspace to"
-}
-
 variable "oauth_token_id" {
   type        = string
   default     = null
   description = "The OAuth token ID of the VCS provider"
+}
+
+variable "repository_identifier" {
+  type        = string
+  description = "The VCS repository to connect the workspace to. E.g. for GitHub this is: <organization>/<repository>"
 }
 
 variable "sensitive_env_variables" {
@@ -55,6 +73,14 @@ variable "sensitive_terraform_variables" {
   type        = map(string)
   default     = {}
   description = "An optional map with sensitive Terraform variables"
+}
+
+variable "sensitive_hcl_variables" {
+  type = map(object({
+    sensitive = string
+  }))
+  default     = {}
+  description = "An optional map with sensitive HCL Terraform variables"
 }
 
 variable "slack_notification_triggers" {
@@ -74,6 +100,12 @@ variable "slack_notification_url" {
   type        = string
   default     = null
   description = "The Slack Webhook URL to send notification to"
+}
+
+variable "ssh_key_id" {
+  type        = string
+  default     = null
+  description = "The SSH key ID to assign to the workspace"
 }
 
 variable "terraform_version" {
