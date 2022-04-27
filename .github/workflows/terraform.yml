@@ -1,5 +1,5 @@
 ---
-name: Terraform Actions
+name: Terraform
 
 on:
   pull_request:
@@ -31,10 +31,11 @@ jobs:
           tf_actions_version: latest
           tf_actions_subcommand: init
           tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Terraform Validate
         uses: hashicorp/terraform-github-actions@master
+        env:
+          AWS_DEFAULT_REGION: eu-west-1
+          GITLAB_TOKEN: 1
         with:
           tf_actions_version: latest
           tf_actions_subcommand: validate
@@ -47,7 +48,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-      - name: Update module usage using terraform-docs and push any changes back to PR branch
+      - name: Update module usage docs and push any changes back to PR branch
         uses: Dirrk/terraform-docs@v1.0.8
         with:
           tf_docs_args: "--sort-inputs-by-required"
@@ -56,3 +57,14 @@ jobs:
           tf_docs_output_file: README.md
           tf_docs_output_method: inject
           tf_docs_find_dir: .
+
+  tfsec:
+    name: tfsec
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@master
+      - name: Terraform security scan
+        uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
+        with:
+          github_token: ${{ github.token }}
