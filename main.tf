@@ -28,13 +28,22 @@ resource "tfe_workspace" "default" {
 }
 
 resource "tfe_notification_configuration" "default" {
-  count            = var.slack_notification_url != null ? 1 : 0
+  count = var.slack_notification_url != null ? 1 : 0
+
   name             = tfe_workspace.default.name
   destination_type = "slack"
   enabled          = length(coalesce(var.slack_notification_triggers, [])) > 0
   triggers         = var.slack_notification_triggers
   url              = var.slack_notification_url
   workspace_id     = tfe_workspace.default.id
+}
+
+resource "tfe_team_access" "defautl" {
+  for_each = var.team_access
+
+  access       = each.value.access
+  team_id      = each.value.team_id
+  workspace_id = tfe_workspace.default.id
 }
 
 resource "tfe_variable" "clear_text_env_variables" {

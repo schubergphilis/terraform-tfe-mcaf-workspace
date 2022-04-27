@@ -17,7 +17,7 @@ variable "auto_apply" {
 
 variable "branch" {
   type        = string
-  default     = "master"
+  default     = "main"
   description = "The Git branch to trigger the TFE workspace for"
 }
 
@@ -106,6 +106,15 @@ variable "ssh_key_id" {
   type        = string
   default     = null
   description = "The SSH key ID to assign to the workspace"
+}
+
+variable "team_access" {
+  type = map(object({
+    access  = string,
+    team_id = string,
+  }))
+  default     = {}
+  description = "An optional map with team IDs and workspace access to assign"
 }
 
 variable "terraform_version" {
