@@ -45,7 +45,6 @@ variable "execution_mode" {
   description = "Which execution mode to use"
 }
 
-
 variable "file_triggers_enabled" {
   type        = bool
   default     = true
@@ -58,9 +57,21 @@ variable "oauth_token_id" {
   description = "The OAuth token ID of the VCS provider"
 }
 
-variable "repository_identifier" {
+variable "global_remote_state" {
+  type        = bool
+  default     = null
+  description = "Allow all workspaces in the organization to read the state of this workspace"
+}
+
+variable "oauth_token_id" {
   type        = string
   description = "The VCS repository to connect the workspace to. E.g. for GitHub this is: <organization>/<repository>"
+}
+
+variable "remote_state_consumer_ids" {
+  type        = set(string)
+  default     = null
+  description = "A set of workspace IDs set as explicit remote state consumers for this workspace"
 }
 
 variable "sensitive_env_variables" {
