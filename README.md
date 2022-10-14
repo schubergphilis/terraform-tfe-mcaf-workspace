@@ -24,7 +24,7 @@ Terraform run will fail.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | name | A name for the Terraform workspace | `string` | n/a | yes |
-| repository\_identifier | The VCS repository to connect the workspace to. E.g. for GitHub this is: <organization>/<repository> | `string` | n/a | yes |
+| oauth\_token\_id | The VCS repository to connect the workspace to. E.g. for GitHub this is: <organization>/<repository> | `string` | n/a | yes |
 | terraform\_organization | The Terraform Enterprise organization to create the workspace in | `string` | n/a | yes |
 | agent\_pool\_id | Agent pool ID, requires "execution\_mode" to be set to agent | `string` | `null` | no |
 | auto\_apply | Whether to automatically apply changes when a Terraform plan is successful | `bool` | `false` | no |
@@ -34,7 +34,8 @@ Terraform run will fail.
 | clear\_text\_terraform\_variables | An optional map with clear text Terraform variables | `map(string)` | `{}` | no |
 | execution\_mode | Which execution mode to use | `string` | `"remote"` | no |
 | file\_triggers\_enabled | Whether to filter runs based on the changed files in a VCS push | `bool` | `true` | no |
-| oauth\_token\_id | The OAuth token ID of the VCS provider | `string` | `null` | no |
+| global\_remote\_state | Allow all workspaces in the organization to read the state of this workspace | `bool` | `null` | no |
+| remote\_state\_consumer\_ids | A set of workspace IDs set as explicit remote state consumers for this workspace | `set(string)` | `null` | no |
 | sensitive\_env\_variables | An optional map with sensitive environment variables | `map(string)` | `{}` | no |
 | sensitive\_hcl\_variables | An optional map with sensitive HCL Terraform variables | <pre>map(object({<br>    sensitive = string<br>  }))</pre> | `{}` | no |
 | sensitive\_terraform\_variables | An optional map with sensitive Terraform variables | `map(string)` | `{}` | no |
