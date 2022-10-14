@@ -34,7 +34,9 @@ Terraform run will fail.
 | clear\_text\_terraform\_variables | An optional map with clear text Terraform variables | `map(string)` | `{}` | no |
 | execution\_mode | Which execution mode to use | `string` | `"remote"` | no |
 | file\_triggers\_enabled | Whether to filter runs based on the changed files in a VCS push | `bool` | `true` | no |
+| global\_remote\_state | Allow all workspaces in the organization to read the state of this workspace | `bool` | `null` | no |
 | oauth\_token\_id | The OAuth token ID of the VCS provider | `string` | `null` | no |
+| remote\_state\_consumer\_ids | A set of workspace IDs set as explicit remote state consumers for this workspace | `set(string)` | `null` | no |
 | sensitive\_env\_variables | An optional map with sensitive environment variables | `map(string)` | `{}` | no |
 | sensitive\_hcl\_variables | An optional map with sensitive HCL Terraform variables | <pre>map(object({<br>    sensitive = string<br>  }))</pre> | `{}` | no |
 | sensitive\_terraform\_variables | An optional map with sensitive Terraform variables | `map(string)` | `{}` | no |
