@@ -47,6 +47,7 @@ Terraform run will fail.
 | terraform\_version | The version of Terraform to use for this workspace | `string` | `"latest"` | no |
 | trigger\_prefixes | List of repository-root-relative paths which should be tracked for changes | `list(string)` | <pre>[<br>  "modules"<br>]</pre> | no |
 | working\_directory | A relative path that Terraform will execute within | `string` | `"terraform"` | no |
+| workspace\_tags | A list of tag names for this workspace. Note that tags must only contain lowercase letters, numbers, colons, or hyphens | `list(string)` | `null` | no |
 
 ## Outputs
 
