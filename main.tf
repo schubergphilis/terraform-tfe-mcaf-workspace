@@ -12,6 +12,7 @@ resource "tfe_workspace" "default" {
   global_remote_state       = var.global_remote_state
   remote_state_consumer_ids = var.remote_state_consumer_ids
   ssh_key_id                = var.ssh_key_id
+  tag_names                 = var.workspace_tags
   terraform_version         = var.terraform_version
   trigger_prefixes          = var.trigger_prefixes
   queue_all_runs            = true
