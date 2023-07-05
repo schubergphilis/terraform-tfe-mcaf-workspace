@@ -153,7 +153,7 @@ variable "working_directory" {
 
 variable "workspace_tags" {
   type        = list(string)
-  default     = null
+  default     = []
   description = "A list of tag names for this workspace. Note that tags must only contain lowercase letters, numbers, colons, or hyphens"
 
   validation {
