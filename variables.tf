@@ -51,6 +51,12 @@ variable "file_triggers_enabled" {
   description = "Whether to filter runs based on the changed files in a VCS push"
 }
 
+variable "github_app_installation_id" {
+  type        = string
+  default     = null
+  description = "The installation ID of the Github App; this conflicts with `oauth_token_id` and can only be used if `oauth_token_id` is not used"
+}
+
 variable "global_remote_state" {
   type        = bool
   default     = null
@@ -60,7 +66,7 @@ variable "global_remote_state" {
 variable "oauth_token_id" {
   type        = string
   default     = null
-  description = "The OAuth token ID of the VCS provider"
+  description = "The OAuth token ID of the VCS provider; this conflicts with `github_app_installation_id` and can only be used if `github_app_installation_id` is not used"
 }
 
 variable "remote_state_consumer_ids" {
