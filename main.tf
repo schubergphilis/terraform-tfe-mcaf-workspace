@@ -1,5 +1,5 @@
 locals {
-  connect_vcs_repo = var.oauth_token_id == null || var.repository_identifier == null ? {} : { create = true }
+  connect_vcs_repo = (var.oauth_token_id == null || var.github_app_installation_id == null) || var.repository_identifier == null ? {} : { create = true }
 }
 
 resource "tfe_workspace" "default" {
@@ -22,10 +22,11 @@ resource "tfe_workspace" "default" {
     for_each = local.connect_vcs_repo
 
     content {
-      identifier         = var.repository_identifier
-      branch             = var.branch
-      ingress_submodules = false
-      oauth_token_id     = var.oauth_token_id
+      branch                     = var.branch
+      github_app_installation_id = var.github_app_installation_id
+      identifier                 = var.repository_identifier
+      ingress_submodules         = false
+      oauth_token_id             = var.oauth_token_id
     }
   }
 }
