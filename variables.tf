@@ -151,6 +151,12 @@ variable "trigger_prefixes" {
   description = "List of repository-root-relative paths which should be tracked for changes"
 }
 
+variable "variable_set_ids" {
+  type        = set(string)
+  default     = []
+  description = "A set of variable set IDs to assign to the workspace"
+}
+
 variable "working_directory" {
   type        = string
   default     = "terraform"

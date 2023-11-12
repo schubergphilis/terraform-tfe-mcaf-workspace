@@ -31,6 +31,13 @@ resource "tfe_workspace" "default" {
   }
 }
 
+resource "tfe_workspace_variable_set" "default" {
+  for_each = var.variable_set_ids
+
+  variable_set_id = each.value
+  workspace_id    = tfe_workspace.default.id
+}
+
 resource "tfe_notification_configuration" "default" {
   count = var.slack_notification_url != null ? 1 : 0
 
