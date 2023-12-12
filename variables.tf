@@ -15,6 +15,12 @@ variable "auto_apply" {
   description = "Whether to automatically apply changes when a Terraform plan is successful"
 }
 
+variable "auto_apply_run_trigger" {
+  type        = bool
+  default     = false
+  description = "Whether to automatically apply changes when a Terraform plan is successful."
+}
+
 variable "branch" {
   type        = string
   default     = "main"

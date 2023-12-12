@@ -2,8 +2,8 @@
 
 MCAF Terraform module to create and manage a Terraform Cloud workspace.
 
-With default options Terraform will also create and manage a GitHub repository and attach it to the Terraform Cloud  
-workspace. If the `create_repository` option is set to `false`, the GitHub repository should already exist or the  
+With default options Terraform will also create and manage a GitHub repository and attach it to the Terraform Cloud
+workspace. If the `create_repository` option is set to `false`, the GitHub repository should already exist or the
 Terraform run will fail.
 
 <!--- BEGIN_TF_DOCS --->
@@ -28,6 +28,7 @@ Terraform run will fail.
 | terraform\_organization | The Terraform Enterprise organization to create the workspace in | `string` | n/a | yes |
 | agent\_pool\_id | Agent pool ID, requires "execution\_mode" to be set to agent | `string` | `null` | no |
 | auto\_apply | Whether to automatically apply changes when a Terraform plan is successful | `bool` | `false` | no |
+| auto\_apply\_run\_trigger | Whether to automatically apply changes when a Terraform plan is successful. | `bool` | `false` | no |
 | branch | The Git branch to trigger the TFE workspace for | `string` | `"main"` | no |
 | clear\_text\_env\_variables | An optional map with clear text environment variables | `map(string)` | `{}` | no |
 | clear\_text\_hcl\_variables | An optional map with clear text HCL Terraform variables | `map(string)` | `{}` | no |

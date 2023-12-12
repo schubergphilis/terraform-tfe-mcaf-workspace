@@ -7,6 +7,7 @@ resource "tfe_workspace" "default" {
   organization              = var.terraform_organization
   agent_pool_id             = var.agent_pool_id
   auto_apply                = var.auto_apply
+  auto_apply_run_trigger    = var.auto_apply_run_trigger
   execution_mode            = var.execution_mode
   file_triggers_enabled     = var.file_triggers_enabled
   global_remote_state       = var.global_remote_state
