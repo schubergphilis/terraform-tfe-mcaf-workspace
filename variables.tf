@@ -49,6 +49,11 @@ variable "execution_mode" {
   type        = string
   default     = "remote"
   description = "Which execution mode to use"
+
+  validation {
+    condition     = var.execution_mode == "agent" || var.execution_mode == "local" || var.execution_mode == "remote"
+    error_message = "The execution_mode value must be either \"agent\", \"local\", or \"remote\"."
+  }
 }
 
 variable "file_triggers_enabled" {
@@ -69,10 +74,45 @@ variable "global_remote_state" {
   description = "Allow all workspaces in the organization to read the state of this workspace"
 }
 
+variable "notification_configuration" {
+  type = list(object({
+    destination_type = string
+    enabled          = optional(bool, true)
+    url              = string
+    triggers = optional(list(string), [
+      "run:created",
+      "run:planning",
+      "run:needs_attention",
+      "run:applying",
+      "run:completed",
+      "run:errored",
+    ])
+  }))
+  default     = []
+  description = "Notification configuration for this workspace"
+
+  validation {
+    condition     = alltrue([for v in var.notification_configuration : contains(["slack", "microsoft-teams"], v.destination_type)])
+    error_message = "Supported destination types are: slack, microsoft-teams"
+  }
+}
+
 variable "oauth_token_id" {
   type        = string
   default     = null
   description = "The OAuth token ID of the VCS provider; this conflicts with `github_app_installation_id` and can only be used if `github_app_installation_id` is not used"
+}
+
+variable "project_id" {
+  type        = string
+  default     = null
+  description = "ID of the project where the workspace should be created"
+}
+
+variable "queue_all_runs" {
+  type        = bool
+  default     = true
+  description = "When set to false no initial run is queued and all runs triggered by a webhook will not be queued, necessary if you need to set variable sets after creation."
 }
 
 variable "remote_state_consumer_ids" {
@@ -104,25 +144,6 @@ variable "sensitive_hcl_variables" {
   }))
   default     = {}
   description = "An optional map with sensitive HCL Terraform variables"
-}
-
-variable "slack_notification_triggers" {
-  type = list(string)
-  default = [
-    "run:created",
-    "run:planning",
-    "run:needs_attention",
-    "run:applying",
-    "run:completed",
-    "run:errored"
-  ]
-  description = "The array of triggers for which to send notifications to Slack"
-}
-
-variable "slack_notification_url" {
-  type        = string
-  default     = null
-  description = "The Slack Webhook URL to send notification to"
 }
 
 variable "ssh_key_id" {

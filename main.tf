@@ -5,18 +5,17 @@ locals {
 resource "tfe_workspace" "default" {
   name                      = var.name
   organization              = var.terraform_organization
-  agent_pool_id             = var.agent_pool_id
   auto_apply                = var.auto_apply
   auto_apply_run_trigger    = var.auto_apply_run_trigger
-  execution_mode            = var.execution_mode
   file_triggers_enabled     = var.file_triggers_enabled
   global_remote_state       = var.global_remote_state
+  project_id                = var.project_id
   remote_state_consumer_ids = var.remote_state_consumer_ids
   ssh_key_id                = var.ssh_key_id
   tag_names                 = var.workspace_tags
   terraform_version         = var.terraform_version
   trigger_prefixes          = var.trigger_prefixes
-  queue_all_runs            = true
+  queue_all_runs            = var.queue_all_runs
   working_directory         = var.working_directory
 
   dynamic "vcs_repo" {
@@ -32,14 +31,20 @@ resource "tfe_workspace" "default" {
   }
 }
 
-resource "tfe_notification_configuration" "default" {
-  count = var.slack_notification_url != null ? 1 : 0
+resource "tfe_workspace_settings" "default" {
+  agent_pool_id  = var.agent_pool_id
+  execution_mode = var.execution_mode
+  workspace_id   = tfe_workspace.default.id
+}
 
-  name             = tfe_workspace.default.name
-  destination_type = "slack"
-  enabled          = length(coalesce(var.slack_notification_triggers, [])) > 0
-  triggers         = var.slack_notification_triggers
-  url              = var.slack_notification_url
+resource "tfe_notification_configuration" "default" {
+  for_each = length(var.notification_configuration) != 0 ? { for v in var.notification_configuration : v.url => v } : {}
+
+  name             = "${tfe_workspace.default.name}-${each.value.destination_type}"
+  destination_type = each.value.destination_type
+  enabled          = each.value.enabled
+  triggers         = each.value.triggers
+  url              = each.value.url
   workspace_id     = tfe_workspace.default.id
 }
 
