@@ -11,13 +11,14 @@ Terraform run will fail.
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.13.0 |
+| terraform | >= 1.3.0 |
+| tfe | >= 0.51.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| tfe | n/a |
+| tfe | >= 0.51.0 |
 
 ## Inputs
 
@@ -37,13 +38,14 @@ Terraform run will fail.
 | file\_triggers\_enabled | Whether to filter runs based on the changed files in a VCS push | `bool` | `true` | no |
 | github\_app\_installation\_id | The installation ID of the Github App; this conflicts with `oauth_token_id` and can only be used if `oauth_token_id` is not used | `string` | `null` | no |
 | global\_remote\_state | Allow all workspaces in the organization to read the state of this workspace | `bool` | `null` | no |
+| notification\_configuration | Notification configuration for this workspace | <pre>list(object({<br>    destination_type = string<br>    enabled          = optional(bool, true)<br>    url              = string<br>    triggers = optional(list(string), [<br>      "run:created",<br>      "run:planning",<br>      "run:needs_attention",<br>      "run:applying",<br>      "run:completed",<br>      "run:errored",<br>    ])<br>  }))</pre> | `[]` | no |
 | oauth\_token\_id | The OAuth token ID of the VCS provider; this conflicts with `github_app_installation_id` and can only be used if `github_app_installation_id` is not used | `string` | `null` | no |
+| project\_id | ID of the project where the workspace should be created | `string` | `null` | no |
+| queue\_all\_runs | When set to false no initial run is queued and all runs triggered by a webhook will not be queued, necessary if you need to set variable sets after creation. | `bool` | `true` | no |
 | remote\_state\_consumer\_ids | A set of workspace IDs set as explicit remote state consumers for this workspace | `set(string)` | `null` | no |
 | sensitive\_env\_variables | An optional map with sensitive environment variables | `map(string)` | `{}` | no |
 | sensitive\_hcl\_variables | An optional map with sensitive HCL Terraform variables | <pre>map(object({<br>    sensitive = string<br>  }))</pre> | `{}` | no |
 | sensitive\_terraform\_variables | An optional map with sensitive Terraform variables | `map(string)` | `{}` | no |
-| slack\_notification\_triggers | The array of triggers for which to send notifications to Slack | `list(string)` | <pre>[<br>  "run:created",<br>  "run:planning",<br>  "run:needs_attention",<br>  "run:applying",<br>  "run:completed",<br>  "run:errored"<br>]</pre> | no |
-| slack\_notification\_url | The Slack Webhook URL to send notification to | `string` | `null` | no |
 | ssh\_key\_id | The SSH key ID to assign to the workspace | `string` | `null` | no |
 | team\_access | An optional map with team IDs and workspace access to assign | <pre>map(object({<br>    access  = string,<br>    team_id = string,<br>  }))</pre> | `{}` | no |
 | terraform\_version | The version of Terraform to use for this workspace | `string` | `"latest"` | no |
