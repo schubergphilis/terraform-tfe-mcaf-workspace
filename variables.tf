@@ -123,6 +123,7 @@ variable "remote_state_consumer_ids" {
 
 variable "repository_identifier" {
   type        = string
+  default     = null
   description = "The VCS repository to connect the workspace to. E.g. for GitHub this is: <organization>/<repository>"
 }
 
@@ -190,7 +191,7 @@ variable "workspace_tags" {
   description = "A list of tag names for this workspace. Note that tags must only contain lowercase letters, numbers, colons, or hyphens"
 
   validation {
-    condition     = alltrue([for workspace_tag in var.workspace_tags : can(regex("[-:a-z0-9]", workspace_tag))])
+    condition     = alltrue([for workspace_tag in coalesce(var.workspace_tags, []) : can(regex("[-:a-z0-9]", workspace_tag))])
     error_message = "One or more tags are not in the correct format (lowercase letters, numbers, colons, or hyphens)"
   }
 }
