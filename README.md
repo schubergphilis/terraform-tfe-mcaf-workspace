@@ -6,7 +6,7 @@ With default options Terraform will also create and manage a GitHub repository a
 workspace. If the `create_repository` option is set to `false`, the GitHub repository should already exist or the
 Terraform run will fail.
 
-<!--- BEGIN_TF_DOCS --->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -59,7 +59,7 @@ Terraform run will fail.
 |------|-------------|
 | id | The Terraform workspace ID |
 
-<!--- END_TF_DOCS --->
+<!-- END_TF_DOCS -->
 
 ## License
 
