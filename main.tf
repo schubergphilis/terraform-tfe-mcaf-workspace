@@ -111,6 +111,13 @@ resource "tfe_variable" "sensitive_terraform_variables" {
   workspace_id = tfe_workspace.default.id
 }
 
+resource "tfe_workspace_variable_set" "default" {
+  for_each = var.variable_set_ids
+
+  variable_set_id = each.value
+  workspace_id    = tfe_workspace.default.id
+}
+
 ################################################################################
 # RBAC
 ################################################################################
