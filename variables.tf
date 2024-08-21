@@ -9,6 +9,19 @@ variable "agent_pool_id" {
   description = "Agent pool ID, requires \"execution_mode\" to be set to agent"
 }
 
+variable "allow_destroy_plan" {
+  type        = bool
+  default     = true
+  description = "Whether destroy plans can be queued on the workspace"
+}
+
+variable "assessments_enabled" {
+  type        = bool
+  default     = true
+  description = "Whether to regularly run health assessments such as drift detection on the workspace"
+}
+
+
 variable "auto_apply" {
   type        = bool
   default     = false
@@ -18,13 +31,13 @@ variable "auto_apply" {
 variable "auto_apply_run_trigger" {
   type        = bool
   default     = false
-  description = "Whether to automatically apply changes when a Terraform plan is successful."
+  description = "Whether to automatically apply changes for runs that were created by run triggers from another workspace"
 }
 
 variable "branch" {
   type        = string
   default     = "main"
-  description = "The Git branch to trigger the TFE workspace for"
+  description = "The git branch to trigger the TFE workspace for"
 }
 
 variable "clear_text_env_variables" {
@@ -45,6 +58,12 @@ variable "clear_text_terraform_variables" {
   description = "An optional map with clear text Terraform variables"
 }
 
+variable "description" {
+  type        = string
+  default     = null
+  description = "A description for the workspace"
+}
+
 variable "execution_mode" {
   type        = string
   default     = "remote"
@@ -62,12 +81,6 @@ variable "file_triggers_enabled" {
   description = "Whether to filter runs based on the changed files in a VCS push"
 }
 
-variable "github_app_installation_id" {
-  type        = string
-  default     = null
-  description = "The installation ID of the Github App; this conflicts with `oauth_token_id` and can only be used if `oauth_token_id` is not used"
-}
-
 variable "global_remote_state" {
   type        = bool
   default     = null
@@ -75,7 +88,7 @@ variable "global_remote_state" {
 }
 
 variable "notification_configuration" {
-  type = list(object({
+  type = map(object({
     destination_type = string
     enabled          = optional(bool, true)
     url              = string
@@ -88,19 +101,19 @@ variable "notification_configuration" {
       "run:errored",
     ])
   }))
-  default     = []
-  description = "Notification configuration for this workspace"
+  default     = {}
+  description = "Notification configuration, using name as key and config as value"
+  nullable    = false
 
   validation {
-    condition     = alltrue([for v in var.notification_configuration : contains(["slack", "microsoft-teams"], v.destination_type)])
-    error_message = "Supported destination types are: slack, microsoft-teams"
+    condition     = alltrue([for k, v in var.notification_configuration : contains(["email", "generic", "microsoft-teams", "slack"], v.destination_type)])
+    error_message = "Supported destination types are: \"email\", \"generic\", \"microsoft-teams\", or \"slack\""
   }
 }
 
 variable "oauth_token_id" {
   type        = string
-  default     = null
-  description = "The OAuth token ID of the VCS provider; this conflicts with `github_app_installation_id` and can only be used if `github_app_installation_id` is not used"
+  description = "The OAuth token ID of the VCS provider"
 }
 
 variable "project_id" {
@@ -124,7 +137,7 @@ variable "remote_state_consumer_ids" {
 variable "repository_identifier" {
   type        = string
   default     = null
-  description = "The VCS repository to connect the workspace to. E.g. for GitHub this is: <organization>/<repository>"
+  description = "The repository identifier to connect the workspace to"
 }
 
 variable "sensitive_env_variables" {
@@ -133,18 +146,18 @@ variable "sensitive_env_variables" {
   description = "An optional map with sensitive environment variables"
 }
 
-variable "sensitive_terraform_variables" {
-  type        = map(string)
-  default     = {}
-  description = "An optional map with sensitive Terraform variables"
-}
-
 variable "sensitive_hcl_variables" {
   type = map(object({
     sensitive = string
   }))
   default     = {}
   description = "An optional map with sensitive HCL Terraform variables"
+}
+
+variable "sensitive_terraform_variables" {
+  type        = map(string)
+  default     = {}
+  description = "An optional map with sensitive Terraform variables"
 }
 
 variable "ssh_key_id" {
@@ -167,11 +180,17 @@ variable "team_access" {
   }))
   default     = {}
   description = "Map of team names and either type of fixed access or custom permissions to assign"
+  nullable    = false
 
   validation {
     condition     = alltrue([for o in var.team_access : !(o.access != null && o.permissions != null)])
     error_message = "Cannot use \"access\" and \"permissions\" keys together when specifying a team's access."
   }
+}
+
+variable "terraform_organization" {
+  type        = string
+  description = "The Terraform Enterprise organization to create the workspace in"
 }
 
 variable "terraform_version" {
@@ -180,9 +199,10 @@ variable "terraform_version" {
   description = "The version of Terraform to use for this workspace"
 }
 
-variable "terraform_organization" {
-  type        = string
-  description = "The Terraform Enterprise organization to create the workspace in"
+variable "trigger_patterns" {
+  type        = list(string)
+  default     = null
+  description = "List of glob patterns that describe the files Terraform Cloud monitors for changes. Trigger patterns are always appended to the root directory of the repository. Mutually exclusive with trigger-prefixes"
 }
 
 variable "trigger_prefixes" {
@@ -191,10 +211,10 @@ variable "trigger_prefixes" {
   description = "List of repository-root-relative paths which should be tracked for changes"
 }
 
-variable "working_directory" {
-  type        = string
-  default     = "terraform"
-  description = "A relative path that Terraform will execute within"
+variable "variable_set_ids" {
+  type        = map(string)
+  default     = {}
+  description = "Map of variable set ids to attach to the workspace"
 }
 
 variable "workspace_tags" {
@@ -206,4 +226,10 @@ variable "workspace_tags" {
     condition     = alltrue([for workspace_tag in coalesce(var.workspace_tags, []) : can(regex("[-:a-z0-9]", workspace_tag))])
     error_message = "One or more tags are not in the correct format (lowercase letters, numbers, colons, or hyphens)"
   }
+}
+
+variable "working_directory" {
+  type        = string
+  default     = "terraform"
+  description = "A relative path that Terraform will execute within"
 }
