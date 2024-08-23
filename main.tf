@@ -8,8 +8,11 @@ locals {
 
 resource "tfe_workspace" "default" {
   name                      = var.name
+  allow_destroy_plan        = var.allow_destroy_plan
+  assessments_enabled       = var.assessments_enabled
   auto_apply                = var.auto_apply
   auto_apply_run_trigger    = var.auto_apply_run_trigger
+  description               = var.description
   file_triggers_enabled     = var.file_triggers_enabled
   global_remote_state       = var.global_remote_state
   organization              = var.terraform_organization
@@ -19,6 +22,7 @@ resource "tfe_workspace" "default" {
   ssh_key_id                = var.ssh_key_id
   tag_names                 = var.workspace_tags
   terraform_version         = var.terraform_version
+  trigger_patterns          = var.trigger_patterns
   trigger_prefixes          = var.trigger_prefixes
   working_directory         = var.working_directory
 
@@ -26,25 +30,24 @@ resource "tfe_workspace" "default" {
     for_each = local.connect_vcs_repo
 
     content {
-      branch                     = var.branch
-      github_app_installation_id = var.github_app_installation_id
-      identifier                 = var.repository_identifier
-      ingress_submodules         = false
-      oauth_token_id             = var.oauth_token_id
+      identifier         = var.repository_identifier
+      branch             = var.branch
+      ingress_submodules = false
+      oauth_token_id     = var.oauth_token_id
     }
   }
 }
 
 resource "tfe_workspace_settings" "default" {
-  agent_pool_id  = var.agent_pool_id
+  agent_pool_id  = var.execution_mode == "agent" ? var.agent_pool_id : null
   execution_mode = var.execution_mode
   workspace_id   = tfe_workspace.default.id
 }
 
 resource "tfe_notification_configuration" "default" {
-  for_each = length(var.notification_configuration) != 0 ? { for v in var.notification_configuration : v.url => v } : {}
+  for_each = var.notification_configuration
 
-  name             = "${tfe_workspace.default.name}-${each.value.destination_type}"
+  name             = each.key
   destination_type = each.value.destination_type
   enabled          = each.value.enabled
   triggers         = each.value.triggers
@@ -71,6 +74,25 @@ resource "tfe_variable" "sensitive_env_variables" {
   workspace_id = tfe_workspace.default.id
 }
 
+resource "tfe_variable" "clear_text_terraform_variables" {
+  for_each = var.clear_text_terraform_variables
+
+  key          = each.key
+  value        = each.value
+  category     = "terraform"
+  workspace_id = tfe_workspace.default.id
+}
+
+resource "tfe_variable" "sensitive_terraform_variables" {
+  for_each = var.sensitive_terraform_variables
+
+  key          = each.key
+  value        = each.value
+  category     = "terraform"
+  sensitive    = true
+  workspace_id = tfe_workspace.default.id
+}
+
 resource "tfe_variable" "clear_text_hcl_variables" {
   for_each = var.clear_text_hcl_variables
 
@@ -92,23 +114,11 @@ resource "tfe_variable" "sensitive_hcl_variables" {
   workspace_id = tfe_workspace.default.id
 }
 
-resource "tfe_variable" "clear_text_terraform_variables" {
-  for_each = var.clear_text_terraform_variables
+resource "tfe_workspace_variable_set" "default" {
+  for_each = var.variable_set_ids
 
-  key          = each.key
-  value        = each.value
-  category     = "terraform"
-  workspace_id = tfe_workspace.default.id
-}
-
-resource "tfe_variable" "sensitive_terraform_variables" {
-  for_each = var.sensitive_terraform_variables
-
-  key          = each.key
-  value        = each.value
-  category     = "terraform"
-  sensitive    = true
-  workspace_id = tfe_workspace.default.id
+  variable_set_id = each.value
+  workspace_id    = tfe_workspace.default.id
 }
 
 ################################################################################
