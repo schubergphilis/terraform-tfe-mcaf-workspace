@@ -30,10 +30,18 @@ resource "tfe_workspace" "default" {
     for_each = local.connect_vcs_repo
 
     content {
-      identifier         = var.repository_identifier
-      branch             = var.branch
-      ingress_submodules = false
-      oauth_token_id     = var.oauth_token_id
+      branch                     = var.branch
+      github_app_installation_id = var.github_app_installation_id
+      identifier                 = var.repository_identifier
+      ingress_submodules         = false
+      oauth_token_id             = var.oauth_token_id
+    }
+  }
+
+  lifecycle {
+    precondition {
+      condition     = can(local.connect_vcs_repo.true) ? (var.github_app_installation_id != null || var.oauth_token_id != null) : true
+      error_message = "VCS repository requires either a GitHub App installation ID or an OAuth token ID"
     }
   }
 }
