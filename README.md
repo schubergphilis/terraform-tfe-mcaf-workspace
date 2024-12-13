@@ -12,13 +12,13 @@ Terraform run will fail.
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
-| <a name="requirement_tfe"></a> [tfe](#requirement\_tfe) | >= 0.51.0 |
+| <a name="requirement_tfe"></a> [tfe](#requirement\_tfe) | >= 0.61.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_tfe"></a> [tfe](#provider\_tfe) | >= 0.51.0 |
+| <a name="provider_tfe"></a> [tfe](#provider\_tfe) | >= 0.61.0 |
 
 ## Modules
 
