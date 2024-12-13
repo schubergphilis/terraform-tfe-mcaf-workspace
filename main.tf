@@ -7,24 +7,22 @@ locals {
 ################################################################################
 
 resource "tfe_workspace" "default" {
-  name                      = var.name
-  allow_destroy_plan        = var.allow_destroy_plan
-  assessments_enabled       = var.assessments_enabled
-  auto_apply                = var.auto_apply
-  auto_apply_run_trigger    = var.auto_apply_run_trigger
-  description               = var.description
-  file_triggers_enabled     = var.file_triggers_enabled
-  global_remote_state       = var.global_remote_state
-  organization              = var.terraform_organization
-  project_id                = var.project_id
-  queue_all_runs            = var.queue_all_runs
-  remote_state_consumer_ids = var.remote_state_consumer_ids
-  ssh_key_id                = var.ssh_key_id
-  tag_names                 = var.workspace_tags
-  terraform_version         = var.terraform_version
-  trigger_patterns          = var.trigger_patterns
-  trigger_prefixes          = var.trigger_prefixes
-  working_directory         = var.working_directory
+  name                   = var.name
+  allow_destroy_plan     = var.allow_destroy_plan
+  assessments_enabled    = var.assessments_enabled
+  auto_apply             = var.auto_apply
+  auto_apply_run_trigger = var.auto_apply_run_trigger
+  description            = var.description
+  file_triggers_enabled  = var.file_triggers_enabled
+  organization           = var.terraform_organization
+  project_id             = var.project_id
+  queue_all_runs         = var.queue_all_runs
+  ssh_key_id             = var.ssh_key_id
+  tag_names              = var.workspace_tags
+  terraform_version      = var.terraform_version
+  trigger_patterns       = var.trigger_patterns
+  trigger_prefixes       = var.trigger_prefixes
+  working_directory      = var.working_directory
 
   dynamic "vcs_repo" {
     for_each = local.connect_vcs_repo
@@ -47,9 +45,11 @@ resource "tfe_workspace" "default" {
 }
 
 resource "tfe_workspace_settings" "default" {
-  agent_pool_id  = var.execution_mode == "agent" ? var.agent_pool_id : null
-  execution_mode = var.execution_mode
-  workspace_id   = tfe_workspace.default.id
+  agent_pool_id             = var.execution_mode == "agent" ? var.agent_pool_id : null
+  execution_mode            = var.execution_mode
+  global_remote_state       = var.global_remote_state
+  remote_state_consumer_ids = var.remote_state_consumer_ids
+  workspace_id              = tfe_workspace.default.id
 }
 
 resource "tfe_notification_configuration" "default" {
