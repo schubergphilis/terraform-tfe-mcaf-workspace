@@ -17,6 +17,7 @@ resource "tfe_workspace" "default" {
   organization           = var.terraform_organization
   project_id             = var.project_id
   queue_all_runs         = var.queue_all_runs
+  speculative_enabled    = var.speculative_enabled
   ssh_key_id             = var.ssh_key_id
   tag_names              = var.workspace_tags
   terraform_version      = var.terraform_version
