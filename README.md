@@ -18,7 +18,7 @@ Terraform run will fail.
 
 | Name | Version |
 |------|---------|
-| <a name="provider_tfe"></a> [tfe](#provider\_tfe) | >= 0.61.0 |
+| <a name="provider_tfe"></a> [tfe](#provider\_tfe) | 0.64.0 |
 
 ## Modules
 
@@ -45,8 +45,6 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_name"></a> [name](#input\_name) | A name for the Terraform workspace | `string` | n/a | yes |
-| <a name="input_terraform_organization"></a> [terraform\_organization](#input\_terraform\_organization) | The Terraform Enterprise organization to create the workspace in | `string` | n/a | yes |
 | <a name="input_agent_pool_id"></a> [agent\_pool\_id](#input\_agent\_pool\_id) | Agent pool ID, requires "execution\_mode" to be set to agent | `string` | `null` | no |
 | <a name="input_allow_destroy_plan"></a> [allow\_destroy\_plan](#input\_allow\_destroy\_plan) | Whether destroy plans can be queued on the workspace | `bool` | `true` | no |
 | <a name="input_assessments_enabled"></a> [assessments\_enabled](#input\_assessments\_enabled) | Whether to regularly run health assessments such as drift detection on the workspace | `bool` | `true` | no |
@@ -61,6 +59,7 @@ No modules.
 | <a name="input_file_triggers_enabled"></a> [file\_triggers\_enabled](#input\_file\_triggers\_enabled) | Whether to filter runs based on the changed files in a VCS push | `bool` | `true` | no |
 | <a name="input_github_app_installation_id"></a> [github\_app\_installation\_id](#input\_github\_app\_installation\_id) | The GitHub App installation ID to use | `string` | `null` | no |
 | <a name="input_global_remote_state"></a> [global\_remote\_state](#input\_global\_remote\_state) | Allow all workspaces in the organization to read the state of this workspace | `bool` | `null` | no |
+| <a name="input_name"></a> [name](#input\_name) | A name for the Terraform workspace | `string` | n/a | yes |
 | <a name="input_notification_configuration"></a> [notification\_configuration](#input\_notification\_configuration) | Notification configuration, using name as key and config as value | <pre>map(object({<br/>    destination_type = string<br/>    enabled          = optional(bool, true)<br/>    url              = string<br/>    triggers = optional(list(string), [<br/>      "run:created",<br/>      "run:planning",<br/>      "run:needs_attention",<br/>      "run:applying",<br/>      "run:completed",<br/>      "run:errored",<br/>    ])<br/>  }))</pre> | `{}` | no |
 | <a name="input_oauth_token_id"></a> [oauth\_token\_id](#input\_oauth\_token\_id) | The OAuth token ID of the VCS provider | `string` | `null` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | ID of the project where the workspace should be created | `string` | `null` | no |
@@ -73,9 +72,10 @@ No modules.
 | <a name="input_speculative_enabled"></a> [speculative\_enabled](#input\_speculative\_enabled) | Enables or disables speculative plans on PR/MR, enabled by default | `bool` | `true` | no |
 | <a name="input_ssh_key_id"></a> [ssh\_key\_id](#input\_ssh\_key\_id) | The SSH key ID to assign to the workspace | `string` | `null` | no |
 | <a name="input_team_access"></a> [team\_access](#input\_team\_access) | Map of team names and either type of fixed access or custom permissions to assign | <pre>map(object({<br/>    access = optional(string, null),<br/>    permissions = optional(object({<br/>      run_tasks         = bool<br/>      runs              = string<br/>      sentinel_mocks    = string<br/>      state_versions    = string<br/>      variables         = string<br/>      workspace_locking = bool<br/>    }), null)<br/>  }))</pre> | `{}` | no |
+| <a name="input_terraform_organization"></a> [terraform\_organization](#input\_terraform\_organization) | The Terraform Enterprise organization to create the workspace in | `string` | n/a | yes |
 | <a name="input_terraform_version"></a> [terraform\_version](#input\_terraform\_version) | The version of Terraform to use for this workspace | `string` | `"latest"` | no |
-| <a name="input_trigger_patterns"></a> [trigger\_patterns](#input\_trigger\_patterns) | List of glob patterns that describe the files Terraform Cloud monitors for changes. Trigger patterns are always appended to the root directory of the repository. Mutually exclusive with trigger-prefixes | `list(string)` | `null` | no |
-| <a name="input_trigger_prefixes"></a> [trigger\_prefixes](#input\_trigger\_prefixes) | List of repository-root-relative paths which should be tracked for changes | `list(string)` | <pre>[<br/>  "modules"<br/>]</pre> | no |
+| <a name="input_trigger_patterns"></a> [trigger\_patterns](#input\_trigger\_patterns) | List of glob patterns that describe the files Terraform Cloud monitors for changes. Trigger patterns are always appended to the root directory of the repository. Mutually exclusive with trigger-prefixes | `list(string)` | <pre>[<br/>  "modules/**/*"<br/>]</pre> | no |
+| <a name="input_trigger_prefixes"></a> [trigger\_prefixes](#input\_trigger\_prefixes) | List of repository-root-relative paths which should be tracked for changes | `list(string)` | `null` | no |
 | <a name="input_variable_set_ids"></a> [variable\_set\_ids](#input\_variable\_set\_ids) | Map of variable set ids to attach to the workspace | `map(string)` | `{}` | no |
 | <a name="input_working_directory"></a> [working\_directory](#input\_working\_directory) | A relative path that Terraform will execute within | `string` | `"terraform"` | no |
 | <a name="input_workspace_tags"></a> [workspace\_tags](#input\_workspace\_tags) | A list of tag names for this workspace. Note that tags must only contain lowercase letters, numbers, colons, or hyphens | `list(string)` | `null` | no |
