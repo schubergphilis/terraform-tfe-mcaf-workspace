@@ -5,6 +5,16 @@ All notable changes to this project will automatically be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.3.0 - 2025-02-24
+
+### What's Changed
+
+#### 🚀 Features
+
+* enhancement: move trigger_prefix default values to trigger_patterns (#24) @noobnesz
+
+**Full Changelog**: https://github.com/schubergphilis/terraform-tfe-mcaf-workspace/compare/v2.2.0...v2.3.0
+
 ## v2.2.0 - 2025-01-28
 
 ### What's Changed
