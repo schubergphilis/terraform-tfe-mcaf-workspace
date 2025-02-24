@@ -21,7 +21,7 @@ resource "tfe_workspace" "default" {
   ssh_key_id             = var.ssh_key_id
   tag_names              = var.workspace_tags
   terraform_version      = var.terraform_version
-  trigger_patterns       = var.trigger_patterns
+  trigger_patterns       = var.working_directory != null ? concat(var.trigger_patterns, ["${var.working_directory}/**/*"]) : var.trigger_patterns
   trigger_prefixes       = var.trigger_prefixes
   working_directory      = var.working_directory
 
