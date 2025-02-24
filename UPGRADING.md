@@ -1,6 +1,11 @@
+# Upgrading Notes
+
+This document captures required refactoring on your part when upgrading to a module version that contains breaking changes.
+
 ## Upgrading to v2.3.0
 
 ### Variables (v2.3.0)
+
 - Default value removed `var.trigger_prefixes`: `["modules"]` -> `null`
 - Default value added `var.trigger_patterns`: `null` -> `["modules/**/*"]`.
 
@@ -20,6 +25,7 @@ Option 1: Migrate to `trigger_patterns` (Recommended)
 2. **Set** equivalent values in `trigger_patterns`.
 
 **Example:**
+
 ```hcl
 # Before
 var.trigger_prefixes = ["envs/prod/"]
@@ -32,11 +38,10 @@ See (documentation on trigger runs when files in specified paths change)[https:/
 
 Option 2: Opt Out
 
-1. Set `tfe_workspace.trigger_patterns` to `null`.
-2. Set `tfe_workspace.trigger_prefixes` to `["modules"]`, or keep the value you are using. 
+1. Set `var.trigger_patterns` to `null`.
+2. Set `var.trigger_prefixes` to `["modules"]`, or keep the value you are using.
 
 This is a temporary workaround; trigger_prefixes will be deprecated.
-
 
 #### Avoid Conflict Errors
 
