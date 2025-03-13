@@ -57,9 +57,9 @@ resource "tfe_notification_configuration" "default" {
   for_each = nonsensitive(toset(keys(var.notification_configuration)))
 
   name             = each.key
-  destination_type = var.notification_configuration[each.key].destination_type
-  enabled          = var.notification_configuration[each.key].enabled
-  triggers         = var.notification_configuration[each.key].triggers
+  destination_type = nonsensitive(var.notification_configuration[each.key].destination_type)
+  enabled          = nonsensitive(var.notification_configuration[each.key].enabled)
+  triggers         = nonsensitive(var.notification_configuration[each.key].triggers)
   url              = var.notification_configuration[each.key].url
   workspace_id     = tfe_workspace.default.id
 }
