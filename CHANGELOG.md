@@ -5,6 +5,18 @@ All notable changes to this project will automatically be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.4.0 - 2025-03-14
+
+### What's Changed
+
+Note: This version bumps the Terraform required version to `>= 1.7.0`, see #26
+
+#### 🐛 Bug Fixes
+
+* fix: invalid for_each argument error in TF 1.10.0+ when notification configuration url is marked sensitive (#26) @mlflr
+
+**Full Changelog**: https://github.com/schubergphilis/terraform-tfe-mcaf-workspace/compare/v2.3.1...v2.4.0
+
 ## v2.3.1 - 2025-02-24
 
 ### What's Changed
