@@ -11,7 +11,7 @@ Terraform run will fail.
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.7.0 |
 | <a name="requirement_tfe"></a> [tfe](#requirement\_tfe) | >= 0.61.0 |
 
 ## Providers
@@ -36,9 +36,11 @@ No modules.
 | [tfe_variable.sensitive_env_variables](https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/resources/variable) | resource |
 | [tfe_variable.sensitive_hcl_variables](https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/resources/variable) | resource |
 | [tfe_variable.sensitive_terraform_variables](https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/resources/variable) | resource |
+| [tfe_variable_set.default](https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/resources/variable_set) | resource |
 | [tfe_workspace.default](https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/resources/workspace) | resource |
 | [tfe_workspace_settings.default](https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/resources/workspace_settings) | resource |
 | [tfe_workspace_variable_set.default](https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/resources/workspace_variable_set) | resource |
+| [tfe_workspace_variable_set.variable_set](https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/resources/workspace_variable_set) | resource |
 | [tfe_team.default](https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/data-sources/team) | data source |
 
 ## Inputs
@@ -76,6 +78,7 @@ No modules.
 | <a name="input_terraform_version"></a> [terraform\_version](#input\_terraform\_version) | The version of Terraform to use for this workspace | `string` | `"latest"` | no |
 | <a name="input_trigger_patterns"></a> [trigger\_patterns](#input\_trigger\_patterns) | List of glob patterns that describe the files Terraform Cloud monitors for changes. Trigger patterns are always appended to the root directory of the repository. Mutually exclusive with trigger-prefixes | `list(string)` | <pre>[<br/>  "modules/**/*"<br/>]</pre> | no |
 | <a name="input_trigger_prefixes"></a> [trigger\_prefixes](#input\_trigger\_prefixes) | List of repository-root-relative paths which should be tracked for changes | `list(string)` | `null` | no |
+| <a name="input_variable_set"></a> [variable\_set](#input\_variable\_set) | If specified, a variable set is created and all workspace variables are assigned to the variable instead of directly to the workspace | `string` | `null` | no |
 | <a name="input_variable_set_ids"></a> [variable\_set\_ids](#input\_variable\_set\_ids) | Map of variable set ids to attach to the workspace | `map(string)` | `{}` | no |
 | <a name="input_working_directory"></a> [working\_directory](#input\_working\_directory) | A relative path that Terraform will execute within | `string` | `"terraform"` | no |
 | <a name="input_workspace_tags"></a> [workspace\_tags](#input\_workspace\_tags) | A list of tag names for this workspace. Note that tags must only contain lowercase letters, numbers, colons, or hyphens | `list(string)` | `null` | no |
@@ -84,6 +87,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_variable_set_id"></a> [variable\_set\_id](#output\_variable\_set\_id) | The Terraform Cloud variable set ID |
 | <a name="output_workspace_id"></a> [workspace\_id](#output\_workspace\_id) | The Terraform Cloud workspace ID |
 | <a name="output_workspace_name"></a> [workspace\_name](#output\_workspace\_name) | The Terraform Cloud workspace name |
 <!-- END_TF_DOCS -->
