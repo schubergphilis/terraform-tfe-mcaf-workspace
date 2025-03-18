@@ -224,6 +224,12 @@ variable "trigger_prefixes" {
   description = "List of repository-root-relative paths which should be tracked for changes"
 }
 
+variable "variable_set" {
+  type        = string
+  default     = null
+  description = "If specified, a variable set is created and all workspace variables are assigned to the variable instead of directly to the workspace"
+}
+
 variable "variable_set_ids" {
   type        = map(string)
   default     = {}

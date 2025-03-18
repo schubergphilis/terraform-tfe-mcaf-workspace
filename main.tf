@@ -64,63 +64,84 @@ resource "tfe_notification_configuration" "default" {
   workspace_id     = tfe_workspace.default.id
 }
 
+resource "tfe_variable_set" "default" {
+  count = var.variable_set != null ? 1 : 0
+
+  name         = var.variable_set
+  description  = "Variables of ${var.name}"
+  organization = var.terraform_organization
+}
+
+resource "tfe_workspace_variable_set" "variable_set" {
+  count = var.variable_set != null ? 1 : 0
+
+  variable_set_id = tfe_variable_set.default[0].id
+  workspace_id    = tfe_workspace.default.id
+}
+
 resource "tfe_variable" "clear_text_env_variables" {
   for_each = var.clear_text_env_variables
 
-  key          = each.key
-  value        = each.value
-  category     = "env"
-  workspace_id = tfe_workspace.default.id
+  key             = each.key
+  value           = each.value
+  category        = "env"
+  variable_set_id = var.variable_set != null ? tfe_variable_set.default[0].id : null
+  workspace_id    = var.variable_set == null ? tfe_workspace.default.id : null
 }
 
 resource "tfe_variable" "sensitive_env_variables" {
   for_each = var.sensitive_env_variables
 
-  key          = each.key
-  value        = each.value
-  category     = "env"
-  sensitive    = true
-  workspace_id = tfe_workspace.default.id
+  key             = each.key
+  value           = each.value
+  category        = "env"
+  sensitive       = true
+  variable_set_id = var.variable_set != null ? tfe_variable_set.default[0].id : null
+  workspace_id    = var.variable_set == null ? tfe_workspace.default.id : null
 }
 
 resource "tfe_variable" "clear_text_terraform_variables" {
   for_each = var.clear_text_terraform_variables
 
-  key          = each.key
-  value        = each.value
-  category     = "terraform"
-  workspace_id = tfe_workspace.default.id
+  key             = each.key
+  value           = each.value
+  category        = "terraform"
+  variable_set_id = var.variable_set != null ? tfe_variable_set.default[0].id : null
+  workspace_id    = var.variable_set == null ? tfe_workspace.default.id : null
 }
 
 resource "tfe_variable" "sensitive_terraform_variables" {
   for_each = var.sensitive_terraform_variables
 
-  key          = each.key
-  value        = each.value
-  category     = "terraform"
-  sensitive    = true
-  workspace_id = tfe_workspace.default.id
+  key             = each.key
+  value           = each.value
+  category        = "terraform"
+  sensitive       = true
+  variable_set_id = var.variable_set != null ? tfe_variable_set.default[0].id : null
+  workspace_id    = var.variable_set == null ? tfe_workspace.default.id : null
 }
 
 resource "tfe_variable" "clear_text_hcl_variables" {
   for_each = var.clear_text_hcl_variables
 
-  key          = each.key
-  value        = each.value
-  category     = "terraform"
-  hcl          = true
-  workspace_id = tfe_workspace.default.id
+  key             = each.key
+  value           = each.value
+  category        = "terraform"
+  hcl             = true
+  variable_set_id = var.variable_set != null ? tfe_variable_set.default[0].id : null
+  workspace_id    = var.variable_set == null ? tfe_workspace.default.id : null
 }
 
 resource "tfe_variable" "sensitive_hcl_variables" {
   for_each = var.sensitive_hcl_variables
 
-  key          = each.key
-  value        = each.value.sensitive
-  category     = "terraform"
-  hcl          = true
-  sensitive    = true
-  workspace_id = tfe_workspace.default.id
+  key             = each.key
+  value           = each.value.sensitive
+  category        = "terraform"
+  hcl             = true
+  sensitive       = true
+  variable_set_id = var.variable_set != null ? tfe_variable_set.default[0].id : null
+  workspace_id    = var.variable_set == null ? tfe_workspace.default.id : null
 }
 
 resource "tfe_workspace_variable_set" "default" {
