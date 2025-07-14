@@ -28,6 +28,12 @@ variable "auto_apply_run_trigger" {
   description = "Whether to automatically apply changes for runs that were created by run triggers from another workspace"
 }
 
+variable "backend_file_name" {
+  type        = string
+  default     = "backend.tf"
+  description = "The name of the backend file to create in the repository"
+}
+
 variable "branch" {
   type        = string
   default     = "main"
@@ -50,6 +56,18 @@ variable "clear_text_terraform_variables" {
   type        = map(string)
   default     = {}
   description = "An optional map with clear text Terraform variables"
+}
+
+variable "commit_author" {
+  type        = string
+  default     = null
+  description = "Committer author name to use. NOTE: GitHub app users may omit author and email information so GitHub can verify commits as the GitHub App."
+}
+
+variable "commit_email" {
+  type        = string
+  default     = null
+  description = "Committer email address to use. NOTE: GitHub app users may omit author and email information so GitHub can verify commits as the GitHub App."
 }
 
 variable "description" {
@@ -217,16 +235,10 @@ variable "trigger_patterns" {
   description = "List of glob patterns that describe the files Terraform Cloud monitors for changes. Trigger patterns are always appended to the root directory of the repository. Mutually exclusive with trigger-prefixes"
 }
 
-variable "trigger_prefixes" {
-  type        = list(string)
-  default     = null
-  description = "List of repository-root-relative paths which should be tracked for changes"
-}
-
-variable "variable_set_ids" {
-  type        = map(string)
-  default     = {}
-  description = "Map of variable set ids to attach to the workspace"
+variable "variable_set_names" {
+  type        = set(string)
+  default     = []
+  description = "Set of variable set names to attach to the workspace"
   nullable    = false
 }
 
