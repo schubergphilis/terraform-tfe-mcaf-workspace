@@ -18,7 +18,7 @@ variable "assessments_enabled" {
 
 variable "auto_apply" {
   type        = bool
-  default     = false
+  default     = true
   description = "Whether to automatically apply changes when a Terraform plan is successful"
 }
 
@@ -26,6 +26,12 @@ variable "auto_apply_run_trigger" {
   type        = bool
   default     = false
   description = "Whether to automatically apply changes for runs that were created by run triggers from another workspace"
+}
+
+variable "backend_file_name" {
+  type        = string
+  default     = "backend.tf"
+  description = "The name of the backend file to create in the repository"
 }
 
 variable "branch" {
@@ -52,6 +58,18 @@ variable "clear_text_terraform_variables" {
   description = "An optional map with clear text Terraform variables"
 }
 
+variable "commit_author" {
+  type        = string
+  default     = null
+  description = "Committer author name to use."
+}
+
+variable "commit_email" {
+  type        = string
+  default     = null
+  description = "Committer email address to use."
+}
+
 variable "description" {
   type        = string
   default     = null
@@ -67,18 +85,6 @@ variable "execution_mode" {
     condition     = var.execution_mode == "agent" || var.execution_mode == "local" || var.execution_mode == "remote"
     error_message = "The execution_mode value must be either \"agent\", \"local\", or \"remote\"."
   }
-}
-
-variable "file_triggers_enabled" {
-  type        = bool
-  default     = true
-  description = "Whether to filter runs based on the changed files in a VCS push"
-}
-
-variable "github_app_installation_id" {
-  type        = string
-  default     = null
-  description = "The GitHub App installation ID to use"
 }
 
 variable "global_remote_state" {
@@ -118,7 +124,6 @@ variable "notification_configuration" {
 
 variable "oauth_token_id" {
   type        = string
-  default     = null
   description = "The OAuth token ID of the VCS provider"
 }
 
@@ -128,21 +133,23 @@ variable "project_id" {
   description = "ID of the project the workspace should be added to"
 }
 
-variable "queue_all_runs" {
-  type        = bool
-  default     = true
-  description = "When set to false no initial run is queued and all runs triggered by a webhook will not be queued, necessary if you need to set variable sets after creation."
-}
-
 variable "remote_state_consumer_ids" {
   type        = set(string)
   default     = null
   description = "A set of workspace IDs set as explicit remote state consumers for this workspace"
 }
 
+variable "repository_files" {
+  type = map(object({
+    content = string
+    managed = optional(bool, true)
+  }))
+  default     = {}
+  description = "A map of files that should be created in the workspace directory"
+}
+
 variable "repository_identifier" {
   type        = string
-  default     = null
   description = "The repository identifier to connect the workspace to"
 }
 
@@ -169,7 +176,7 @@ variable "sensitive_terraform_variables" {
 variable "speculative_enabled" {
   type        = bool
   default     = true
-  description = "Whether this workspace allows speculative plans. Setting this to false prevents Terraform from running plans on pull requests."
+  description = "Whether this workspace allows speculative plans. Setting this to false prevents HCP Terraform or the Terraform Enterprise instance from running plans on pull requests, which can improve security if the VCS repository is public or includes untrusted contributors."
 }
 
 variable "ssh_key_id" {
@@ -217,12 +224,6 @@ variable "trigger_patterns" {
   description = "List of glob patterns that describe the files Terraform Cloud monitors for changes. Trigger patterns are always appended to the root directory of the repository. Mutually exclusive with trigger-prefixes"
 }
 
-variable "trigger_prefixes" {
-  type        = list(string)
-  default     = null
-  description = "(**DEPRECATED**) List of repository-root-relative paths which should be tracked for changes"
-}
-
 variable "variable_set_ids" {
   type        = map(string)
   default     = {}
@@ -231,7 +232,7 @@ variable "variable_set_ids" {
 
   validation {
     condition     = length(var.variable_set_ids) == 0 || length(var.variable_set_names) == 0
-    error_message = "You cannot use both variable_set_ids and variable_set_names at the same time."
+    error_message = "You cannot use both variable_set_ids and variable_set_names at the same time. Please use one of them."
   }
 }
 
