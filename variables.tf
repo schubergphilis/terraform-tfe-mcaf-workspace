@@ -1,8 +1,3 @@
-variable "name" {
-  type        = string
-  description = "A name for the Terraform workspace"
-}
-
 variable "agent_pool_id" {
   type        = string
   default     = null
@@ -20,7 +15,6 @@ variable "assessments_enabled" {
   default     = true
   description = "Whether to regularly run health assessments such as drift detection on the workspace"
 }
-
 
 variable "auto_apply" {
   type        = bool
@@ -93,6 +87,11 @@ variable "global_remote_state" {
   description = "Allow all workspaces in the organization to read the state of this workspace"
 }
 
+variable "name" {
+  type        = string
+  description = "A name for the Terraform workspace"
+}
+
 variable "notification_configuration" {
   type = map(object({
     destination_type = string
@@ -126,7 +125,7 @@ variable "oauth_token_id" {
 variable "project_id" {
   type        = string
   default     = null
-  description = "ID of the project where the workspace should be created"
+  description = "ID of the project the workspace should be added to"
 }
 
 variable "queue_all_runs" {
@@ -170,7 +169,7 @@ variable "sensitive_terraform_variables" {
 variable "speculative_enabled" {
   type        = bool
   default     = true
-  description = "Enables or disables speculative plans on PR/MR, enabled by default"
+  description = "Whether this workspace allows speculative plans. Setting this to false prevents Terraform from running plans on pull requests."
 }
 
 variable "ssh_key_id" {
@@ -203,7 +202,7 @@ variable "team_access" {
 
 variable "terraform_organization" {
   type        = string
-  description = "The Terraform Enterprise organization to create the workspace in"
+  description = "The Terraform organization to create the workspace in"
 }
 
 variable "terraform_version" {
