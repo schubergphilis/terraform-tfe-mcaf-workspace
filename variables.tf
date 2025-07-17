@@ -202,6 +202,7 @@ variable "team_access" {
 
 variable "terraform_organization" {
   type        = string
+  default     = null
   description = "The Terraform organization to create the workspace in"
 }
 
