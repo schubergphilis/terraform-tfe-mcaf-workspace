@@ -5,6 +5,25 @@ All notable changes to this project will automatically be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.5.0 - 2025-07-17
+
+### What's Changed
+
+#### 🚀 Features
+
+* feat: Add `github-vcs` and `gitlab-vcs` submodules (#31) @shoekstra
+
+#### 🐛 Bug Fixes
+
+* fix: Make `var.terraform_organization` optional (#32) @shoekstra
+* fix: Correct file trigger logic and update default trigger patterns (#29) @shoekstra
+
+#### 🧺 Miscellaneous
+
+* chore: Update variable descriptions and outputs (#30) @shoekstra
+
+**Full Changelog**: https://github.com/schubergphilis/terraform-tfe-mcaf-workspace/compare/v2.4.0...v2.5.0
+
 ## v2.4.0 - 2025-03-14
 
 ### What's Changed
