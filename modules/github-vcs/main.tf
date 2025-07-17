@@ -9,10 +9,6 @@ resource "github_repository_file" "backend" {
     organization = var.terraform_organization,
     workspace    = var.name
   })
-
-  lifecycle {
-    ignore_changes = [commit_author, commit_email]
-  }
 }
 
 # Files created by this resource are fully managed. Any downstream updates will be replaced the
@@ -25,10 +21,6 @@ resource "github_repository_file" "managed" {
   content       = each.value.content
   file          = "${var.working_directory}/${each.key}"
   repository    = split("/", var.repository_identifier)[1]
-
-  lifecycle {
-    ignore_changes = [commit_author, commit_email]
-  }
 }
 
 # Files created by this resource are a one time action. Any downstream content changes will not be
@@ -43,7 +35,7 @@ resource "github_repository_file" "unmanaged" {
   repository    = split("/", var.repository_identifier)[1]
 
   lifecycle {
-    ignore_changes = [commit_author, commit_email, content]
+    ignore_changes = [content]
   }
 }
 

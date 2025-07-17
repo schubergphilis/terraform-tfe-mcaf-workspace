@@ -18,10 +18,6 @@ resource "gitlab_repository_file" "backend" {
     organization = var.terraform_organization,
     workspace    = var.name
   })
-
-  lifecycle {
-    ignore_changes = [author_email, author_name]
-  }
 }
 
 # Files created by this resource are fully managed. Any downstream updates will be replaced the
@@ -39,10 +35,6 @@ resource "gitlab_repository_file" "managed" {
   file_path             = "${var.working_directory}/${each.key}"
   project               = data.gitlab_project.default.id
   update_commit_message = "Updated ${var.working_directory}/${var.backend_file_name}"
-
-  lifecycle {
-    ignore_changes = [author_email, author_name]
-  }
 }
 
 # Files created by this resource are a one time action. Any downstream content changes will not be
@@ -62,7 +54,7 @@ resource "gitlab_repository_file" "unmanaged" {
   update_commit_message = "Updated ${var.working_directory}/${var.backend_file_name}"
 
   lifecycle {
-    ignore_changes = [author_email, author_name, content]
+    ignore_changes = [content]
   }
 }
 
