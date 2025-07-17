@@ -1,5 +1,18 @@
 locals {
   connect_vcs_repo = var.repository_identifier != null ? { create = true } : {}
+
+  # Use var.variable_set_ids if set, otherwise use var.variable_set_names to get variable set IDs.
+  variable_set_ids = (
+    length(var.variable_set_ids) > 0 ? var.variable_set_ids :
+    { for vs in data.tfe_variable_set.default : vs.name => vs.id }
+  )
+}
+
+# Get variable set IDs.
+data "tfe_variable_set" "default" {
+  for_each = var.variable_set_names
+
+  name = each.key
 }
 
 ################################################################################
@@ -124,7 +137,7 @@ resource "tfe_variable" "sensitive_hcl_variables" {
 }
 
 resource "tfe_workspace_variable_set" "default" {
-  for_each = var.variable_set_ids
+  for_each = local.variable_set_ids
 
   variable_set_id = each.value
   workspace_id    = tfe_workspace.default.id
