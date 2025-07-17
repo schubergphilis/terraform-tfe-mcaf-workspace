@@ -4,6 +4,8 @@ run "setup" {
   }
 }
 
+mock_provider "tfe" {}
+
 // The default test checks logic in module when using it's default values when creating a plan.
 // Additional tests below check individual variables and changes to their defaults. Try not to
 // create assertions for resource fields that reference just the variable.
