@@ -219,7 +219,7 @@ variable "trigger_patterns" {
 
 variable "trigger_prefixes" {
   type        = list(string)
-  default     = null
+  default     = []
   description = "(**DEPRECATED**) List of repository-root-relative paths which should be tracked for changes"
 }
 

@@ -1,6 +1,18 @@
 locals {
   connect_vcs_repo = var.repository_identifier != null ? { create = true } : {}
 
+  # When working_directory is set, trigger_patterns should include it, otherwise
+  # trigger_patterns should be null.
+  trigger_patterns_empty_or_null = var.trigger_patterns == null || try(length(var.trigger_patterns) == 0, true)
+  trigger_patterns = (
+    var.working_directory != null && !local.trigger_patterns_empty_or_null ?
+    concat(var.trigger_patterns, ["${var.working_directory}/*"]) :
+    null
+  )
+
+  trigger_prefixes_empty_or_null = var.trigger_prefixes == null || try(length(var.trigger_prefixes) == 0, true)
+  trigger_prefixes               = local.trigger_prefixes_empty_or_null ? null : var.trigger_prefixes
+
   # Use var.variable_set_ids if set, otherwise use var.variable_set_names to get variable set IDs.
   variable_set_ids = (
     length(var.variable_set_ids) > 0 ? var.variable_set_ids :
@@ -26,7 +38,7 @@ resource "tfe_workspace" "default" {
   auto_apply             = var.auto_apply
   auto_apply_run_trigger = var.auto_apply_run_trigger
   description            = var.description
-  file_triggers_enabled  = var.file_triggers_enabled
+  file_triggers_enabled  = local.trigger_patterns == null && local.trigger_prefixes == null ? false : var.file_triggers_enabled
   organization           = var.terraform_organization
   project_id             = var.project_id
   queue_all_runs         = var.queue_all_runs
@@ -34,8 +46,8 @@ resource "tfe_workspace" "default" {
   ssh_key_id             = var.ssh_key_id
   tag_names              = var.workspace_tags
   terraform_version      = var.terraform_version
-  trigger_patterns       = var.working_directory != null && var.trigger_patterns != null ? concat(var.trigger_patterns, ["${var.working_directory}/**/*"]) : var.trigger_patterns
-  trigger_prefixes       = var.trigger_prefixes
+  trigger_patterns       = var.file_triggers_enabled ? local.trigger_patterns : null
+  trigger_prefixes       = var.file_triggers_enabled ? local.trigger_prefixes : null
   working_directory      = var.working_directory
 
   dynamic "vcs_repo" {
