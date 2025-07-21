@@ -8,13 +8,13 @@ MCAF Terraform module to create and manage an HCP Terraform workspace.
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.7.0 |
-| <a name="requirement_tfe"></a> [tfe](#requirement\_tfe) | >= 0.61.0 |
+| <a name="requirement_tfe"></a> [tfe](#requirement\_tfe) | >= 0.68.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_tfe"></a> [tfe](#provider\_tfe) | >= 0.61.0 |
+| <a name="provider_tfe"></a> [tfe](#provider\_tfe) | >= 0.68.0 |
 
 ## Modules
 

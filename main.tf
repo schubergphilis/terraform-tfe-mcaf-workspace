@@ -73,6 +73,9 @@ resource "tfe_workspace" "default" {
 resource "tfe_workspace_settings" "default" {
   agent_pool_id             = var.execution_mode == "agent" ? var.agent_pool_id : null
   execution_mode            = var.execution_mode
+  assessments_enabled       = var.assessments_enabled
+  auto_apply                = var.auto_apply
+  description               = var.description
   global_remote_state       = var.global_remote_state
   remote_state_consumer_ids = var.remote_state_consumer_ids
   workspace_id              = tfe_workspace.default.id
