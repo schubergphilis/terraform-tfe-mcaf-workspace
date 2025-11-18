@@ -201,12 +201,6 @@ variable "ssh_key_id" {
   description = "The SSH key ID to assign to the workspace"
 }
 
-variable "tags" {
-  type        = map(string)
-  default     = null
-  description = "A map of key value tags for this workspace"
-}
-
 variable "team_access" {
   type = map(object({
     access = optional(string, null),
@@ -270,6 +264,12 @@ variable "variable_set_names" {
   default     = []
   description = "Set of variable set names to attach to the workspace"
   nullable    = false
+}
+
+variable "workspace_map_tags" {
+  type        = map(string)
+  default     = null
+  description = "A map of key value tags for this workspace"
 }
 
 variable "workspace_tags" {
