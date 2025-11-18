@@ -28,6 +28,23 @@ variable "auto_apply_run_trigger" {
   description = "Whether to automatically apply changes for runs that were created by run triggers from another workspace"
 }
 
+variable "auto_destroy_activity_duration" {
+  type        = string
+  default     = null
+  description = "Duration string (e.g. \"7d\") after last activity when an auto-destroy run should be queued for this workspace"
+
+  validation {
+    condition     = (var.auto_destroy_activity_duration == null) || (var.auto_destroy_at == null)
+    error_message = "You cannot use both auto_destroy_activity_duration and auto_destroy_at at the same time."
+  }
+}
+
+variable "auto_destroy_at" {
+  type        = string
+  default     = null
+  description = "Absolute time (RFC3339, e.g. \"2025-12-31T23:59:00Z\") at which this workspace's resources should be automatically destroyed"
+}
+
 variable "branch" {
   type        = string
   default     = "main"
@@ -75,6 +92,12 @@ variable "file_triggers_enabled" {
   description = "Whether to filter runs based on the changed files in a VCS push"
 }
 
+variable "force_delete" {
+  type        = bool
+  default     = false
+  description = "If true, the workspace will be force deleted even when resources are still under management"
+}
+
 variable "github_app_installation_id" {
   type        = string
   default     = null
@@ -112,7 +135,7 @@ variable "notification_configuration" {
 
   validation {
     condition     = alltrue([for k, v in var.notification_configuration : contains(["email", "generic", "microsoft-teams", "slack"], v.destination_type)])
-    error_message = "Supported destination types are: \"email\", \"generic\", \"microsoft-teams\", or \"slack\""
+    error_message = "Supported destination types are: \"email\", \"generic\", \"microsoft-teams\", or \"slack\"."
   }
 }
 
@@ -131,7 +154,7 @@ variable "project_id" {
 variable "queue_all_runs" {
   type        = bool
   default     = true
-  description = "When set to false no initial run is queued and all runs triggered by a webhook will not be queued, necessary if you need to set variable sets after creation."
+  description = "When set to false no initial run is queued and all runs triggered by a webhook will not be queued, necessary if you need to set variable sets after creation"
 }
 
 variable "remote_state_consumer_ids" {
@@ -169,13 +192,19 @@ variable "sensitive_terraform_variables" {
 variable "speculative_enabled" {
   type        = bool
   default     = true
-  description = "Whether this workspace allows speculative plans. Setting this to false prevents Terraform from running plans on pull requests."
+  description = "Whether this workspace allows speculative plans. Setting this to false prevents Terraform from running plans on pull requests"
 }
 
 variable "ssh_key_id" {
   type        = string
   default     = null
   description = "The SSH key ID to assign to the workspace"
+}
+
+variable "tags" {
+  type        = map(string)
+  default     = null
+  description = "A map of key value tags for this workspace"
 }
 
 variable "team_access" {
@@ -246,11 +275,11 @@ variable "variable_set_names" {
 variable "workspace_tags" {
   type        = list(string)
   default     = null
-  description = "A list of tag names for this workspace. Note that tags must only contain lowercase letters, numbers, colons, or hyphens"
+  description = "(**DEPRECATED**) A list of tag names for this workspace. Note that tags must only contain lowercase letters, numbers, colons, or hyphens"
 
   validation {
     condition     = alltrue([for workspace_tag in coalesce(var.workspace_tags, []) : can(regex("[-:a-z0-9]", workspace_tag))])
-    error_message = "One or more tags are not in the correct format (lowercase letters, numbers, colons, or hyphens)"
+    error_message = "One or more tags are not in the correct format (lowercase letters, numbers, colons, or hyphens)."
   }
 }
 
