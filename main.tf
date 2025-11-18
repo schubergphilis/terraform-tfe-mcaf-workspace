@@ -52,7 +52,7 @@ resource "tfe_workspace" "default" {
   trigger_patterns               = var.file_triggers_enabled ? local.trigger_patterns : null
   trigger_prefixes               = var.file_triggers_enabled ? local.trigger_prefixes : null
   working_directory              = var.working_directory
-  tags                           = var.tags
+  tags                           = var.workspace_map_tags
 
   dynamic "vcs_repo" {
     for_each = local.connect_vcs_repo
