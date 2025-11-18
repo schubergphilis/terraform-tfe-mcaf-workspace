@@ -5,6 +5,20 @@ All notable changes to this project will automatically be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.6.0 - 2025-11-18
+
+### What's Changed
+
+#### 🚀 Features
+
+* feat: add variables related to tags and ephemeral workspaces (#34) @marwinbaumannsbp
+
+#### 🐛 Bug Fixes
+
+* fix: rename tags to workspace_map_tags (#35) @marwinbaumannsbp
+
+**Full Changelog**: https://github.com/schubergphilis/terraform-tfe-mcaf-workspace/compare/v2.5.0...v2.6.0
+
 ## v2.5.0 - 2025-07-17
 
 ### What's Changed
