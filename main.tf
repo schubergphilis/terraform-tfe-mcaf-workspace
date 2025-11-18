@@ -32,23 +32,27 @@ data "tfe_variable_set" "default" {
 ################################################################################
 
 resource "tfe_workspace" "default" {
-  name                   = var.name
-  allow_destroy_plan     = var.allow_destroy_plan
-  assessments_enabled    = var.assessments_enabled
-  auto_apply             = var.auto_apply
-  auto_apply_run_trigger = var.auto_apply_run_trigger
-  description            = var.description
-  file_triggers_enabled  = local.trigger_patterns == null && local.trigger_prefixes == null ? false : var.file_triggers_enabled
-  organization           = var.terraform_organization
-  project_id             = var.project_id
-  queue_all_runs         = var.queue_all_runs
-  speculative_enabled    = var.speculative_enabled
-  ssh_key_id             = var.ssh_key_id
-  tag_names              = var.workspace_tags
-  terraform_version      = var.terraform_version
-  trigger_patterns       = var.file_triggers_enabled ? local.trigger_patterns : null
-  trigger_prefixes       = var.file_triggers_enabled ? local.trigger_prefixes : null
-  working_directory      = var.working_directory
+  name                           = var.name
+  allow_destroy_plan             = var.allow_destroy_plan
+  assessments_enabled            = var.assessments_enabled
+  auto_apply                     = var.auto_apply
+  auto_apply_run_trigger         = var.auto_apply_run_trigger
+  auto_destroy_activity_duration = var.auto_destroy_activity_duration
+  auto_destroy_at                = var.auto_destroy_at
+  description                    = var.description
+  file_triggers_enabled          = local.trigger_patterns == null && local.trigger_prefixes == null ? false : var.file_triggers_enabled
+  force_delete                   = var.force_delete
+  organization                   = var.terraform_organization
+  project_id                     = var.project_id
+  queue_all_runs                 = var.queue_all_runs
+  speculative_enabled            = var.speculative_enabled
+  ssh_key_id                     = var.ssh_key_id
+  tag_names                      = var.workspace_tags
+  terraform_version              = var.terraform_version
+  trigger_patterns               = var.file_triggers_enabled ? local.trigger_patterns : null
+  trigger_prefixes               = var.file_triggers_enabled ? local.trigger_prefixes : null
+  working_directory              = var.working_directory
+  tags                           = var.tags
 
   dynamic "vcs_repo" {
     for_each = local.connect_vcs_repo
