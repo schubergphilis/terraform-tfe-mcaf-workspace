@@ -241,9 +241,16 @@ variable "trigger_patterns" {
   description = "List of glob patterns that describe the files Terraform Cloud monitors for changes. Trigger patterns are always appended to the root directory of the repository. Mutually exclusive with trigger-prefixes"
 }
 
+variable "trigger_patterns_working_directory_recursive" {
+  type        = bool
+  default     = false
+  description = "If true, include all nested files in the working directory; if false, match only its root."
+  nullable    = false
+}
+
 variable "trigger_prefixes" {
   type        = list(string)
-  default     = []
+  default     = null
   description = "(**DEPRECATED**) List of repository-root-relative paths which should be tracked for changes"
 }
 

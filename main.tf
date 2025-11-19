@@ -1,17 +1,27 @@
 locals {
   connect_vcs_repo = var.repository_identifier != null ? { create = true } : {}
 
-  # When working_directory is set, trigger_patterns should include it, otherwise
-  # trigger_patterns should be null.
-  trigger_patterns_empty_or_null = var.trigger_patterns == null || try(length(var.trigger_patterns) == 0, true)
-  trigger_patterns = (
-    var.working_directory != null && !local.trigger_patterns_empty_or_null ?
-    concat(var.trigger_patterns, ["${var.working_directory}/*"]) :
-    null
+  # When using trigger patterns, calculate suffix to append to working_directory.
+  working_directory_suffix = (
+    var.trigger_patterns_working_directory_recursive
+    ? "${var.working_directory}/**/*"
+    : "${var.working_directory}/*"
   )
 
-  trigger_prefixes_empty_or_null = var.trigger_prefixes == null || try(length(var.trigger_prefixes) == 0, true)
-  trigger_prefixes               = local.trigger_prefixes_empty_or_null ? null : var.trigger_prefixes
+  # When working_directory is set, trigger_patterns should include it, otherwise
+  # trigger_patterns should be null.
+  trigger_patterns = (
+    var.working_directory != null && length(coalesce(var.trigger_patterns, [])) > 0
+    ? concat(var.trigger_patterns, [local.working_directory_suffix])
+    : null
+  )
+
+  # Only enable trigger_prefixes when a non-empty list is provided.
+  trigger_prefixes = (
+    length(coalesce(var.trigger_prefixes, [])) > 0
+    ? var.trigger_prefixes
+    : null
+  )
 
   # Use var.variable_set_ids if set, otherwise use var.variable_set_names to get variable set IDs.
   variable_set_ids = (
