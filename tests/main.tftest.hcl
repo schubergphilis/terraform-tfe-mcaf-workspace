@@ -153,6 +153,31 @@ run "set_multiple_trigger_patterns" {
   }
 }
 
+run "set_trigger_patterns_working_directory_recursive_to_true" {
+  command = plan
+
+  module {
+    source = "./"
+  }
+
+  variables {
+    name                   = "basic-workspace-${run.setup.random_string}"
+    terraform_organization = "my-test-org"
+
+    trigger_patterns_working_directory_recursive = true
+  }
+
+  assert {
+    condition     = length(tfe_workspace.default.trigger_patterns) == 2
+    error_message = "Expected trigger_patterns to contain 2 elements"
+  }
+
+  assert {
+    condition     = contains(tfe_workspace.default.trigger_patterns, "terraform/**/*")
+    error_message = "Expected trigger_patterns to contain \"terraform/**/*\""
+  }
+}
+
 run "set_empty_trigger_variables" {
   variables {
     name                   = "basic-workspace-${run.setup.random_string}"
