@@ -90,6 +90,7 @@ variable "file_triggers_enabled" {
   type        = bool
   default     = true
   description = "Whether to filter runs based on the changed files in a VCS push"
+  nullable    = false
 }
 
 variable "force_delete" {

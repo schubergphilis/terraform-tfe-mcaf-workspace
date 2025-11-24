@@ -278,3 +278,37 @@ run "set_trigger_patterns_null_and_use_trigger_prefixes" {
     error_message = "Expected trigger_prefixes[0] to be \"terraform/"
   }
 }
+
+run "set_working_directory_null" {
+  command = plan
+
+  module {
+    source = "./"
+  }
+
+  variables {
+    name                   = "working-directory-null-${run.setup.random_string}"
+    terraform_organization = "my-test-org"
+    working_directory      = null
+  }
+
+  assert {
+    condition     = tfe_workspace.default.working_directory == null
+    error_message = "Expected working_directory to be null"
+  }
+
+  assert {
+    condition     = tfe_workspace.default.file_triggers_enabled == false
+    error_message = "Expected file_triggers_enabled to be false when working_directory is null"
+  }
+
+  assert {
+    condition     = tfe_workspace.default.trigger_patterns == null
+    error_message = "Expected trigger_patterns to be null when working_directory is null"
+  }
+
+  assert {
+    condition     = tfe_workspace.default.trigger_prefixes == null
+    error_message = "Expected trigger_prefixes to be null when working_directory is null"
+  }
+}

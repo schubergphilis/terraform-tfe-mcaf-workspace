@@ -3,9 +3,13 @@ locals {
 
   # When using trigger patterns, calculate suffix to append to working_directory.
   working_directory_suffix = (
-    var.trigger_patterns_working_directory_recursive
-    ? "${var.working_directory}/**/*"
-    : "${var.working_directory}/*"
+    var.working_directory != null ?
+    (
+      var.trigger_patterns_working_directory_recursive
+      ? "${var.working_directory}/**/*"
+      : "${var.working_directory}/*"
+    )
+    : null
   )
 
   # When working_directory is set, trigger_patterns should include it, otherwise
