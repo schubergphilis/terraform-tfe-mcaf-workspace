@@ -295,4 +295,9 @@ variable "working_directory" {
   type        = string
   default     = "terraform"
   description = "A relative path that Terraform will execute within"
+
+  validation {
+    condition     = (var.repository_identifier == null) || (var.working_directory != null)
+    error_message = "working_directory cannot be null when repository_identifier is set."
+  }
 }
