@@ -1,5 +1,5 @@
 locals {
-  connect_vcs_repo = var.repository_identifier != null ? { create = true } : {}
+  connect_vcs_repo = var.repository_identifier != null
 
   # When using trigger patterns, calculate suffix to append to working_directory.
   working_directory_suffix = (
@@ -8,17 +8,17 @@ locals {
     : "${var.working_directory}/*"
   )
 
-  # When working_directory is set, trigger_patterns should include it, otherwise
+  # When an vcs repo is set, trigger_patterns should include it, otherwise
   # trigger_patterns should be null.
   trigger_patterns = (
-    var.working_directory != null && length(coalesce(var.trigger_patterns, [])) > 0
+    local.connect_vcs_repo && length(coalesce(var.trigger_patterns, [])) > 0
     ? concat(var.trigger_patterns, [local.working_directory_suffix])
     : null
   )
 
-  # Only enable trigger_prefixes when a non-empty list is provided.
+  # When an vcs repo is set, enable trigger_prefixes when a non-empty list is provided.
   trigger_prefixes = (
-    length(coalesce(var.trigger_prefixes, [])) > 0
+    local.connect_vcs_repo && length(coalesce(var.trigger_prefixes, [])) > 0
     ? var.trigger_prefixes
     : null
   )
@@ -50,7 +50,7 @@ resource "tfe_workspace" "default" {
   auto_destroy_activity_duration = var.auto_destroy_activity_duration
   auto_destroy_at                = var.auto_destroy_at
   description                    = var.description
-  file_triggers_enabled          = local.trigger_patterns == null && local.trigger_prefixes == null ? false : var.file_triggers_enabled
+  file_triggers_enabled          = local.connect_vcs_repo ? var.file_triggers_enabled : false
   force_delete                   = var.force_delete
   organization                   = var.terraform_organization
   project_id                     = var.project_id
@@ -61,11 +61,11 @@ resource "tfe_workspace" "default" {
   terraform_version              = var.terraform_version
   trigger_patterns               = var.file_triggers_enabled ? local.trigger_patterns : null
   trigger_prefixes               = var.file_triggers_enabled ? local.trigger_prefixes : null
-  working_directory              = var.working_directory
+  working_directory              = local.connect_vcs_repo ? var.working_directory : null
   tags                           = var.workspace_map_tags
 
   dynamic "vcs_repo" {
-    for_each = local.connect_vcs_repo
+    for_each = local.connect_vcs_repo ? { create = true } : {}
 
     content {
       branch                     = var.branch
@@ -78,7 +78,7 @@ resource "tfe_workspace" "default" {
 
   lifecycle {
     precondition {
-      condition     = can(local.connect_vcs_repo.true) ? (var.github_app_installation_id != null || var.oauth_token_id != null) : true
+      condition     = local.connect_vcs_repo ? (var.github_app_installation_id != null || var.oauth_token_id != null) : true
       error_message = "VCS repository requires either a GitHub App installation ID or an OAuth token ID"
     }
   }

@@ -90,6 +90,7 @@ variable "file_triggers_enabled" {
   type        = bool
   default     = true
   description = "Whether to filter runs based on the changed files in a VCS push"
+  nullable    = false
 }
 
 variable "force_delete" {
@@ -239,6 +240,11 @@ variable "trigger_patterns" {
   type        = list(string)
   default     = ["modules/**/*"]
   description = "List of glob patterns that describe the files Terraform Cloud monitors for changes. Trigger patterns are always appended to the root directory of the repository. Mutually exclusive with trigger-prefixes"
+
+  validation {
+    condition     = var.trigger_prefixes == null || var.trigger_patterns == null
+    error_message = "You cannot set both trigger_patterns and trigger_prefixes at the same time; they are mutually exclusive."
+  }
 }
 
 variable "trigger_patterns_working_directory_recursive" {
@@ -294,4 +300,5 @@ variable "working_directory" {
   type        = string
   default     = "terraform"
   description = "A relative path that Terraform will execute within"
+  nullable    = false
 }
