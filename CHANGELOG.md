@@ -5,6 +5,16 @@ All notable changes to this project will automatically be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.7.1 - 2025-11-28
+
+### What's Changed
+
+#### 🐛 Bug Fixes
+
+* fix: clarify VCS-mode trigger behaviour and make trigger logic fully null-safe (#37) @marwinbaumannsbp
+
+**Full Changelog**: https://github.com/schubergphilis/terraform-tfe-mcaf-workspace/compare/v2.7.0...v2.7.1
+
 ## v2.7.0 - 2025-11-20
 
 ### What's Changed
