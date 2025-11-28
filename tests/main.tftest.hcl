@@ -43,23 +43,13 @@ run "default" {
   }
 
   assert {
-    condition     = tfe_workspace.default.file_triggers_enabled == true
-    error_message = "Expected file_triggers_enabled to be true"
+    condition     = tfe_workspace.default.file_triggers_enabled == false
+    error_message = "Expected file_triggers_enabled to be false"
   }
 
   assert {
-    condition     = length(tfe_workspace.default.trigger_patterns) == 2
-    error_message = "Expected trigger_patterns to contain 2 elements"
-  }
-
-  assert {
-    condition     = contains(tfe_workspace.default.trigger_patterns, "terraform/*")
-    error_message = "Expected trigger_patterns to contain \"terraform/*\""
-  }
-
-  assert {
-    condition     = contains(tfe_workspace.default.trigger_patterns, "modules/**/*")
-    error_message = "Expected trigger_patterns to contain \"modules/**/*\""
+    condition     = tfe_workspace.default.trigger_patterns == null
+    error_message = "Expected trigger_patterns to be null"
   }
 
   assert {
@@ -88,7 +78,7 @@ run "default" {
   }
 }
 
-run "set_file_triggers_enabled_false" {
+run "set_trigger_prefixes" {
   command = plan
 
   module {
@@ -99,6 +89,87 @@ run "set_file_triggers_enabled_false" {
     name                   = "basic-workspace-${run.setup.random_string}"
     terraform_organization = "my-test-org"
 
+    # No repository_identifier
+    trigger_patterns = null
+    trigger_prefixes = ["terraform/"]
+  }
+
+  assert {
+    condition     = tfe_workspace.default.file_triggers_enabled == false
+    error_message = "Expected file_triggers_enabled to be false when no repository is connected"
+  }
+
+  assert {
+    condition     = tfe_workspace.default.trigger_patterns == null
+    error_message = "Expected trigger_patterns to be null when no repository is connected"
+  }
+
+  assert {
+    condition     = tfe_workspace.default.trigger_prefixes == null
+    error_message = "Expected trigger_prefixes to be null when no repository is connected"
+  }
+
+  assert {
+    condition     = tfe_workspace.default.working_directory == null
+    error_message = "Expected working_directory to be null when no repository is connected"
+  }
+}
+
+run "set_repository_identifier" {
+  command = plan
+
+  module {
+    source = "./"
+  }
+
+  variables {
+    name                   = "basic-workspace-${run.setup.random_string}"
+    terraform_organization = "my-test-org"
+
+    oauth_token_id        = "ot-xxxxxxxxxxxxxxxx"
+    repository_identifier = "test/test"
+  }
+
+  assert {
+    condition     = tfe_workspace.default.file_triggers_enabled == true
+    error_message = "Expected file_triggers_enabled to be true"
+  }
+
+  assert {
+    condition     = length(tfe_workspace.default.trigger_patterns) == 2
+    error_message = "Expected trigger_patterns to contain 2 elements"
+  }
+
+  assert {
+    condition     = contains(tfe_workspace.default.trigger_patterns, "terraform/*")
+    error_message = "Expected trigger_patterns to contain \"terraform/*\""
+  }
+
+  assert {
+    condition     = contains(tfe_workspace.default.trigger_patterns, "modules/**/*")
+    error_message = "Expected trigger_patterns to contain \"modules/**/*\""
+  }
+
+  assert {
+    condition     = tfe_workspace.default.trigger_prefixes == null
+    error_message = "Expected trigger_prefixes to be null"
+  }
+}
+
+
+run "set_repository_identifier_and_set_file_triggers_enabled_false" {
+  command = plan
+
+  module {
+    source = "./"
+  }
+
+  variables {
+    name                   = "basic-workspace-${run.setup.random_string}"
+    terraform_organization = "my-test-org"
+
+    oauth_token_id        = "ot-xxxxxxxxxxxxxxxx"
+    repository_identifier = "test/test"
     file_triggers_enabled = false
   }
 
@@ -118,7 +189,7 @@ run "set_file_triggers_enabled_false" {
   }
 }
 
-run "set_multiple_trigger_patterns" {
+run "set_repository_identifier_and_set_multiple_trigger_patterns" {
   command = plan
 
   module {
@@ -129,7 +200,9 @@ run "set_multiple_trigger_patterns" {
     name                   = "basic-workspace-${run.setup.random_string}"
     terraform_organization = "my-test-org"
 
-    trigger_patterns = ["path1/*.tf", "path2/*.tf"]
+    oauth_token_id        = "ot-xxxxxxxxxxxxxxxx"
+    repository_identifier = "test/test"
+    trigger_patterns      = ["path1/*.tf", "path2/*.tf"]
   }
 
   assert {
@@ -153,7 +226,7 @@ run "set_multiple_trigger_patterns" {
   }
 }
 
-run "set_trigger_patterns_working_directory_recursive_to_true" {
+run "set_repository_identifier_and_set_trigger_patterns_working_directory_recursive_to_true" {
   command = plan
 
   module {
@@ -164,6 +237,8 @@ run "set_trigger_patterns_working_directory_recursive_to_true" {
     name                   = "basic-workspace-${run.setup.random_string}"
     terraform_organization = "my-test-org"
 
+    oauth_token_id                               = "ot-xxxxxxxxxxxxxxxx"
+    repository_identifier                        = "test/test"
     trigger_patterns_working_directory_recursive = true
   }
 
@@ -178,38 +253,57 @@ run "set_trigger_patterns_working_directory_recursive_to_true" {
   }
 }
 
-run "set_empty_trigger_variables" {
+run "set_repository_identifier_custom_working_directory_and_recursive_patterns" {
+  command = plan
+
+  module {
+    source = "./"
+  }
+
   variables {
     name                   = "basic-workspace-${run.setup.random_string}"
     terraform_organization = "my-test-org"
 
-    trigger_patterns = []
-    trigger_prefixes = []
-  }
+    oauth_token_id        = "ot-xxxxxxxxxxxxxxxx"
+    repository_identifier = "test/test"
 
-  module {
-    source = "./"
-  }
-
-  command = plan
-
-  assert {
-    condition     = tfe_workspace.default.file_triggers_enabled == false
-    error_message = "Expected file_triggers_enabled to be false"
+    working_directory                            = "infra"
+    trigger_patterns                             = ["path1/*.tf"]
+    trigger_patterns_working_directory_recursive = true
   }
 
   assert {
-    condition     = tfe_workspace.default.trigger_patterns == null
-    error_message = "Expected trigger_patterns to be null"
+    condition     = tfe_workspace.default.file_triggers_enabled == true
+    error_message = "Expected file_triggers_enabled to be true when repository is connected and triggers are configured"
+  }
+
+  assert {
+    condition     = length(tfe_workspace.default.trigger_patterns) == 2
+    error_message = "Expected trigger_patterns to contain 2 elements (custom pattern + infra/**/*)"
+  }
+
+  assert {
+    condition     = contains(tfe_workspace.default.trigger_patterns, "path1/*.tf")
+    error_message = "Expected trigger_patterns to contain \"path1/*.tf\""
+  }
+
+  assert {
+    condition     = contains(tfe_workspace.default.trigger_patterns, "infra/**/*")
+    error_message = "Expected trigger_patterns to contain \"infra/**/*\" when recursive is true and working_directory is \"infra\""
   }
 
   assert {
     condition     = tfe_workspace.default.trigger_prefixes == null
-    error_message = "Expected trigger_prefixes to be null"
+    error_message = "Expected trigger_prefixes to be null when trigger_patterns is non-null"
+  }
+
+  assert {
+    condition     = tfe_workspace.default.working_directory == "infra"
+    error_message = "Expected working_directory to be \"infra\""
   }
 }
 
-run "set_trigger_patterns_empty_and_use_trigger_prefixes" {
+run "set_repository_identifier_and_set_trigger_patterns_null_and_use_trigger_prefixes" {
   command = plan
 
   module {
@@ -217,10 +311,13 @@ run "set_trigger_patterns_empty_and_use_trigger_prefixes" {
   }
 
   variables {
-    name                   = "trigger-prefixes-workspace-${run.setup.random_string}"
+    name                   = "basic-workspace-${run.setup.random_string}"
     terraform_organization = "my-test-org"
-    trigger_patterns       = []
-    trigger_prefixes       = ["terraform/"]
+
+    oauth_token_id        = "ot-xxxxxxxxxxxxxxxx"
+    repository_identifier = "test/test"
+    trigger_patterns      = null
+    trigger_prefixes      = ["terraform/"]
   }
 
   assert {
@@ -244,7 +341,7 @@ run "set_trigger_patterns_empty_and_use_trigger_prefixes" {
   }
 }
 
-run "set_trigger_patterns_null_and_use_trigger_prefixes" {
+run "set_both_trigger_patterns_and_prefixes_should_fail" {
   command = plan
 
   module {
@@ -252,63 +349,15 @@ run "set_trigger_patterns_null_and_use_trigger_prefixes" {
   }
 
   variables {
-    name                   = "trigger-prefixes-workspace-${run.setup.random_string}"
+    name                   = "basic-workspace-${run.setup.random_string}"
     terraform_organization = "my-test-org"
-    trigger_patterns       = null
-    trigger_prefixes       = ["terraform/"]
+
+    # These two together violate the validation:
+    trigger_patterns = ["modules/**/*"]
+    trigger_prefixes = ["terraform/"]
   }
 
-  assert {
-    condition     = tfe_workspace.default.file_triggers_enabled == true
-    error_message = "Expected file_triggers_enabled to be true"
-  }
-
-  assert {
-    condition     = tfe_workspace.default.trigger_patterns == null
-    error_message = "Expected trigger_patterns to be null"
-  }
-
-  assert {
-    condition     = length(tfe_workspace.default.trigger_prefixes) == 1
-    error_message = "Expected trigger_prefixes to contain 1 element"
-  }
-
-  assert {
-    condition     = tfe_workspace.default.trigger_prefixes[0] == "terraform/"
-    error_message = "Expected trigger_prefixes[0] to be \"terraform/"
-  }
-}
-
-run "set_working_directory_null" {
-  command = plan
-
-  module {
-    source = "./"
-  }
-
-  variables {
-    name                   = "working-directory-null-${run.setup.random_string}"
-    terraform_organization = "my-test-org"
-    working_directory      = null
-  }
-
-  assert {
-    condition     = tfe_workspace.default.working_directory == null
-    error_message = "Expected working_directory to be null"
-  }
-
-  assert {
-    condition     = tfe_workspace.default.file_triggers_enabled == false
-    error_message = "Expected file_triggers_enabled to be false when working_directory is null"
-  }
-
-  assert {
-    condition     = tfe_workspace.default.trigger_patterns == null
-    error_message = "Expected trigger_patterns to be null when working_directory is null"
-  }
-
-  assert {
-    condition     = tfe_workspace.default.trigger_prefixes == null
-    error_message = "Expected trigger_prefixes to be null when working_directory is null"
-  }
+  expect_failures = [
+    var.trigger_patterns,
+  ]
 }
