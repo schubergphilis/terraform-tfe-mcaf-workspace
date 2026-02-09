@@ -2,6 +2,13 @@
 
 This document captures required refactoring on your part when upgrading to a module version that contains breaking changes.
 
+## Upgrading to v3.0.0
+
+### Variables (v3.0.0)
+
+- The deprecated variable `trigger_prefixes` has been removed.
+- The deprecated variable `workspace_tags` has been removed. `workspace_map_tags` has been renamed to `workspace_tags`.
+
 ## Upgrading to v2.3.0
 
 ### Variables (v2.3.0)

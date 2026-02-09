@@ -240,11 +240,6 @@ variable "trigger_patterns" {
   type        = list(string)
   default     = ["modules/**/*"]
   description = "List of glob patterns that describe the files Terraform Cloud monitors for changes. Trigger patterns are always appended to the root directory of the repository. Mutually exclusive with trigger-prefixes"
-
-  validation {
-    condition     = var.trigger_prefixes == null || var.trigger_patterns == null
-    error_message = "You cannot set both trigger_patterns and trigger_prefixes at the same time; they are mutually exclusive."
-  }
 }
 
 variable "trigger_patterns_working_directory_recursive" {
@@ -252,12 +247,6 @@ variable "trigger_patterns_working_directory_recursive" {
   default     = false
   description = "If true, include all nested files in the working directory; if false, match only its root."
   nullable    = false
-}
-
-variable "trigger_prefixes" {
-  type        = list(string)
-  default     = null
-  description = "(**DEPRECATED**) List of repository-root-relative paths which should be tracked for changes"
 }
 
 variable "variable_set_ids" {
@@ -279,21 +268,10 @@ variable "variable_set_names" {
   nullable    = false
 }
 
-variable "workspace_map_tags" {
+variable "workspace_tags" {
   type        = map(string)
   default     = null
   description = "A map of key value tags for this workspace"
-}
-
-variable "workspace_tags" {
-  type        = list(string)
-  default     = null
-  description = "(**DEPRECATED**) A list of tag names for this workspace. Note that tags must only contain lowercase letters, numbers, colons, or hyphens"
-
-  validation {
-    condition     = alltrue([for workspace_tag in coalesce(var.workspace_tags, []) : can(regex("[-:a-z0-9]", workspace_tag))])
-    error_message = "One or more tags are not in the correct format (lowercase letters, numbers, colons, or hyphens)."
-  }
 }
 
 variable "working_directory" {
