@@ -16,13 +16,6 @@ locals {
     : null
   )
 
-  # When an vcs repo is set, enable trigger_prefixes when a non-empty list is provided.
-  trigger_prefixes = (
-    local.connect_vcs_repo && length(coalesce(var.trigger_prefixes, [])) > 0
-    ? var.trigger_prefixes
-    : null
-  )
-
   # Use var.variable_set_ids if set, otherwise use var.variable_set_names to get variable set IDs.
   variable_set_ids = (
     length(var.variable_set_ids) > 0 ? var.variable_set_ids :
@@ -57,12 +50,10 @@ resource "tfe_workspace" "default" {
   queue_all_runs                 = var.queue_all_runs
   speculative_enabled            = var.speculative_enabled
   ssh_key_id                     = var.ssh_key_id
-  tag_names                      = var.workspace_tags
   terraform_version              = var.terraform_version
   trigger_patterns               = var.file_triggers_enabled ? local.trigger_patterns : null
-  trigger_prefixes               = var.file_triggers_enabled ? local.trigger_prefixes : null
   working_directory              = local.connect_vcs_repo ? var.working_directory : null
-  tags                           = var.workspace_map_tags
+  tags                           = var.workspace_tags
 
   dynamic "vcs_repo" {
     for_each = local.connect_vcs_repo ? { create = true } : {}
