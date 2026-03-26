@@ -64,6 +64,7 @@ module "workspace" {
   queue_all_runs                 = false # Prevent queuing a run before backend config is written.
   remote_state_consumer_ids      = var.remote_state_consumer_ids
   repository_identifier          = var.repository_identifier
+  run_triggers                   = var.run_triggers
   sensitive_env_variables        = var.sensitive_env_variables
   sensitive_hcl_variables        = var.sensitive_hcl_variables
   sensitive_terraform_variables  = var.sensitive_terraform_variables

@@ -191,3 +191,21 @@ resource "tfe_team_access" "default" {
     }
   }
 }
+
+################################################################################
+# Run Triggers
+################################################################################
+
+data "tfe_workspace" "run_triggers" {
+  for_each = toset(var.run_triggers)
+
+  name         = each.key
+  organization = var.terraform_organization
+}
+
+resource "tfe_run_trigger" "default" {
+  for_each = toset(var.run_triggers)
+
+  sourceable_id = data.tfe_workspace.run_triggers[each.key].id
+  workspace_id  = tfe_workspace.default.id
+}
