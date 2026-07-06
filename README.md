@@ -1,3 +1,9 @@
+<!-- migrate-repo:banner -->
+> [!IMPORTANT]
+> **This repository has moved to [`schubergphilis-ep/terraform-tfe-mcaf-workspace`](https://github.com/schubergphilis-ep/terraform-tfe-mcaf-workspace).**
+> Please update your references and use the new location for issues, PRs, and contributions.
+<!-- migrate-repo:banner -->
+
 # terraform-tfe-mcaf-workspace
 
 MCAF Terraform module to create and manage an HCP Terraform workspace.
