@@ -88,6 +88,7 @@ repository_files = {
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | ID of the project the workspace should be added to | `string` | `null` | no |
 | <a name="input_remote_state_consumer_ids"></a> [remote\_state\_consumer\_ids](#input\_remote\_state\_consumer\_ids) | A set of workspace IDs set as explicit remote state consumers for this workspace | `set(string)` | `null` | no |
 | <a name="input_repository_files"></a> [repository\_files](#input\_repository\_files) | A map of files that should be created in the workspace directory | <pre>map(object({<br/>    content = string<br/>    managed = optional(bool, true)<br/>  }))</pre> | `{}` | no |
+| <a name="input_run_triggers"></a> [run\_triggers](#input\_run\_triggers) | A list of workspace names that will trigger runs in this workspace when applied | `list(string)` | `[]` | no |
 | <a name="input_sensitive_env_variables"></a> [sensitive\_env\_variables](#input\_sensitive\_env\_variables) | An optional map with sensitive environment variables | `map(string)` | `{}` | no |
 | <a name="input_sensitive_hcl_variables"></a> [sensitive\_hcl\_variables](#input\_sensitive\_hcl\_variables) | An optional map with sensitive HCL Terraform variables | <pre>map(object({<br/>    sensitive = string<br/>  }))</pre> | `{}` | no |
 | <a name="input_sensitive_terraform_variables"></a> [sensitive\_terraform\_variables](#input\_sensitive\_terraform\_variables) | An optional map with sensitive Terraform variables | `map(string)` | `{}` | no |
